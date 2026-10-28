@@ -20,6 +20,8 @@ export async function signIn(formData: FormData) {
 
 export async function signOut() {
   const supabase = await createClient();
-  await supabase.auth.signOut();
+  const { error } = await supabase.auth.signOut();
+  if (error) throw new Error("Unable to sign out");
   revalidatePath("/auth-check");
+  redirect("/auth-check");
 }

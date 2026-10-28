@@ -1,5 +1,10 @@
 import type en from "./en";
 const ur: Record<keyof typeof en, string> = {
+  signOutReal: "سائن آؤٹ",
+  catalogueUnavailable: "یہ کیٹلاگ صرف فعال دکان کے مالکان کے لیے دستیاب ہے۔",
+  realCataloguePartial: "ابتدائی کیٹلاگ: نئی مصنوعات میں ایک ویریئنٹ شامل کریں۔ ترمیم، تصاویر اور امپورٹ ابھی منسلک نہیں ہیں۔",
+  backToPreview: "انٹرفیس کا نمونہ کھولیں",
+  saveFailed: "مصنوعات محفوظ نہیں ہو سکیں۔ دوبارہ کوشش کریں۔",
   authFailed: "سائن اِن نہیں ہو سکا۔ اپنی معلومات چیک کریں یا منتظم سے رابطہ کریں۔",
   invalidEmail: "درست ای میل ایڈریس درج کریں۔",
   requiredPassword: "اپنا پاس ورڈ درج کریں۔",

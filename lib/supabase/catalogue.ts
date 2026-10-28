@@ -21,3 +21,16 @@ export async function createProduct(input: unknown): Promise<string> {
   if (error || typeof data !== "string") throw new Error("Unable to save product");
   return data;
 }
+
+export async function listProducts() {
+  const access = await getAccountAccess();
+  if (!access || access.role !== "owner") throw new Error("Access denied");
+  const client = await createClient();
+  const { data, error } = await client.from("products")
+    .select("id,name,category,is_visible")
+    .eq("shop_id", access.shopId)
+    .order("created_at", { ascending: false })
+    .limit(50);
+  if (error || !data) throw new Error("Unable to load products");
+  return data;
+}

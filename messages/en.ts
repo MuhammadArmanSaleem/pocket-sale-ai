@@ -1,4 +1,9 @@
 const en = {
+  signOutReal: "Sign out",
+  catalogueUnavailable: "This catalogue is available to active shop owners only.",
+  realCataloguePartial: "Early catalogue: create one variant per new product. Editing, photos and import are not connected yet.",
+  backToPreview: "Open interface preview",
+  saveFailed: "Could not save the product. Please try again.",
   authFailed: "Unable to sign in. Check your credentials or contact the administrator.",
   invalidEmail: "Enter a valid email address.",
   requiredPassword: "Enter your password.",

@@ -92,3 +92,14 @@ Preserve numbered entries; supersede explicitly rather than rewriting history. R
 - Consequences: Spreadsheet dependencies are larger but lazy-loaded. Production import policy/security remains separate. Next config uses native ESM (.mjs) to avoid TS-config runtime transpilation failure observed in preview.
 - Evidence: 10 tests, strict type checking, lint and production build pass; audit reports zero vulnerabilities. FRONTEND-REVIEW.md distinguishes source checks from unverified browser/device checks.
 - Revisit when: Real import processing or backend services are integrated; dependency advisories or bundle measurements change.
+
+
+## ADR-009 — Isolated Supabase database foundation before integrations
+- Status: SQL implemented; hosted deployment and UI integration pending.
+- Context: Build the data structure before AI or WhatsApp and keep migrations ordered in one folder.
+- Decision: Three CLI-generated forward migrations in supabase/migrations, with explicit order in supabase/README.md. Use one shop per owner, composite shop-scoped foreign keys, RLS plus narrow column grants, private admin membership and private product storage. Admin has directory/support access, not general owner catalogue/customer data access. Store draft orders only; do not mutate stock through orders.
+- Rationale: Establish tenant boundaries and validation without inventing agent or fulfilment rules.
+- Alternatives: Client-only filtering, JWT user_metadata roles, public image bucket, premature order automation.
+- Consequences: Provisioning and upload cleanup need trusted server flows; SQL does not itself wire UI/Auth APIs. PKR/photo limits remain provisional. Reply insertion atomically reopens owner tickets or marks admin replies waiting.
+- Evidence: Embedded PostgreSQL migration/security tests and official Supabase RLS/Storage guidance; exact limitations and commands in supabase/README.md. No hosted project was modified.
+- Revisit when: Credential lifecycle, final currency/image requirements, staff/multi-shop needs or order confirmation rules are approved.

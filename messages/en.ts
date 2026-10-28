@@ -1,4 +1,6 @@
 const en = {
+  adminAccessRequired: "Administrator access is required.",
+  adminSupportPartial: "Support inbox: owner provisioning and other admin tools are not connected yet.",
   policyMissing: "Shop policies are not configured. Contact an administrator.",
   signOutReal: "Sign out",
   catalogueUnavailable: "This catalogue is available to active shop owners only.",

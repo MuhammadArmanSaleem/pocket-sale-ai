@@ -39,3 +39,8 @@ export const supportReplySchema = yup.object({
   ticketId: yup.string().uuid().required(),
   body: yup.string().max(3000).required().test("nonblank", "Required", value => Boolean(value?.trim())),
 }).noUnknown();
+
+export const adminTicketStatusSchema = yup.object({
+  ticketId: yup.string().uuid().required(),
+  status: yup.mixed<"open" | "waiting" | "resolved">().oneOf(["open", "waiting", "resolved"]).required(),
+}).noUnknown();

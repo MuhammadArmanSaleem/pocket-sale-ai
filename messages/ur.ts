@@ -1,5 +1,7 @@
 import type en from "./en";
 const ur: Record<keyof typeof en, string> = {
+  adminAccessRequired: "منتظم کی اجازت درکار ہے۔",
+  adminSupportPartial: "سپورٹ ان باکس: مالک کے اکاؤنٹس اور دیگر منتظم ٹولز ابھی منسلک نہیں ہیں۔",
   policyMissing: "دکان کی پالیسیاں موجود نہیں ہیں۔ منتظم سے رابطہ کریں۔",
   signOutReal: "سائن آؤٹ",
   catalogueUnavailable: "یہ کیٹلاگ صرف فعال دکان کے مالکان کے لیے دستیاب ہے۔",

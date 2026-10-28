@@ -1,0 +1,18 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "noEmit": false,
+    "outDir": ".test-build",
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "incremental": false
+  },
+  "include": [
+    "lib/import.ts",
+    "lib/variants.ts",
+    "lib/spreadsheet.ts",
+    "lib/constants.ts",
+    "lib/types.ts"
+  ],
+  "exclude": ["node_modules"]
+}

@@ -21,7 +21,7 @@ Read this file, PRD.md, ARCHITECTURE-ESSENTIALS.md, DESIGN.md and relevant DECIS
 - Inspect branch/head and existing changes. Work on focused branches and reviewable PRs; preserve main and unrelated edits. Do not merge, force-push or deploy without applicable authorization.
 - Keep PRD, architecture, design and decisions aligned with material changes. Distinguish confirmed requirements, proposals, implementation and unresolved questions.
 - For docs-only changes check references and consistency. For implementation run appropriate type/build checks and exercise changed UI flows, including mobile and Urdu RTL. Report exact results and limitations.
-- Add strict TypeScript and no-explicit-any lint enforcement in the implementation phase; until added, this is a contributor rule, not automated enforcement.
+- Strict TypeScript and no-explicit-any lint enforcement are implemented. Keep both checks passing; do not weaken them to bypass errors.
 - Never commit credentials, private customer data or conversation dumps. Public docs should describe professional product requirements, not personal background.
 - Record material choices in DECISIONS.md with context, decision, rationale, alternatives, consequences, evidence and revisit conditions.
 - Handoff: explain what changed, why, checks, limitations and the next concrete dependency.

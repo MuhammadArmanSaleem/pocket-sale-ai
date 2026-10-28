@@ -61,3 +61,34 @@ Preserve numbered entries; supersede explicitly rather than rewriting history. R
 - Consequences: Central locale definitions and typed message keys; logical CSS, bidi isolation and portal verification remain necessary. Switching must preserve route and unsaved work. Dependency compatibility still requires implementation checks.
 - Evidence: Official next-intl server/client configuration guidance and shadcn RTL/Next.js guidance reviewed on 2026-10-28; see DESIGN.md references. Runtime behavior is unverified.
 - Revisit when: Public localized URLs or another preference persistence requirement is introduced.
+
+
+## ADR-006 — Deliver an explicitly simulated dashboard before service integrations
+- Status: UI implemented; browser acceptance pending.
+- Context: Dashboard/UI comes before agent integration and real accounts.
+- Decision: Build shadcn/Radix UI with typed central definitions, in-memory preview records, owner connection gating and admin support; keep order automation deferred. Add next-intl locale cookie and shared document/primitive direction.
+- Rationale: Review actual components and flows without inventing service access or business behavior.
+- Alternatives: Extend standalone custom HTML; silently connect services; present fake authentication as production.
+- Consequences: Reload resets preview records; no production isolation or notifications. Import limits (500 rows/2 MB; 6 photos/5 MB each) are explicit provisional preview choices. Final import policies remain unresolved.
+- Evidence: See PR verification. Six focused import-validation cases were added. Managed browser preview failed; no successful browser acceptance claimed.
+- Revisit when: UI review is complete and backend/auth/integration requirements are ready.
+
+## ADR-007 — Standard dynamic locale rendering and official shadcn source fallback
+- Status: Implemented.
+- Context: Request-time locale requires dynamic rendering; starter experimental cache/agent flags are unnecessary. shadcn CLI registry access failed in the build environment.
+- Decision: Remove experimental starter flags, use Tailwind PostCSS and standard Next.js dynamic route rendering. Retrieve Radix shadcn source from its official registry repository and preserve its MIT license.
+- Rationale: Keep the chosen framework/component system with verified build compatibility.
+- Alternatives: Rebuild primitives; change hosting/framework; retain experimental root cache behavior.
+- Consequences: No dependency on the CLI registry at runtime. Revisit source components with future shadcn updates. Real device/RTL checks still required.
+- Evidence: Production compilation and type checks succeeded during implementation; final outcomes recorded in PR.
+- Revisit when: Framework caching or component generation requirements change.
+
+## ADR-008 — Replace vulnerable spreadsheet parser and repair preview state
+- Status: Implemented; browser acceptance pending.
+- Context: Review found xlsx advisories, policy success without retained state, stale import previews, incomplete RTL styles and unfiltered shop support navigation.
+- Decision: Use lazy Papa Parse/ExcelJS readers, override ExcelJS uuid to patched 11.x, reject complex/formula cells, retain policies in workspace state, filter support by selected shop, and reset/invalidate import reads on dismissal. Make primitive directional styles explicit and raise shared button targets to 44px minimum.
+- Rationale: Fix concrete review failures while keeping the UI-only scope and central definitions.
+- Alternatives: Keep vulnerable xlsx; label non-persisted policy edits as saved; assume direction context rewrites CSS.
+- Consequences: Spreadsheet dependencies are larger but lazy-loaded. Production import policy/security remains separate. Next config uses native ESM (.mjs) to avoid TS-config runtime transpilation failure observed in preview.
+- Evidence: 10 tests, strict type checking, lint and production build pass; audit reports zero vulnerabilities. FRONTEND-REVIEW.md distinguishes source checks from unverified browser/device checks.
+- Revisit when: Real import processing or backend services are integrated; dependency advisories or bundle measurements change.

@@ -1,33 +1,35 @@
 # PocketSales AI
 
-A planned WhatsApp sales-assistant platform for Pakistani clothing sellers. Each shop owner has a separate account and shop workspace; the super admin manages owner accounts and support queries.
+A bilingual seller and super admin dashboard UI built with Next.js, TypeScript, shadcn/ui (Radix), Tailwind tokens and next-intl.
 
-## Current state
-The repository contains a Next.js starter and a documentation foundation. No product dashboard, shadcn installation, Urdu localization, authentication, Supabase connection, WhatsApp integration or AI agent is implemented in this branch. An earlier standalone design preview is a reference only and is not application code in this repository.
+## Current implementation
+- Explicit preview entry for owner/admin; owner shop setup and simulated WhatsApp connection/failure/disconnection gate.
+- Owner overview, product catalogue, variant prices/quantities, hide/show, local multiple-photo selection and shop-policy form.
+- CSV/XLSX import preview with strict header/value checks, grouped variants, hidden products and later photo upload. Preview limits are provisional, not approved production import policy.
+- Conversation list/detail, simulated seller takeover/resume and local replies.
+- Draft-order review and follow-up placeholders; no finalized order automation.
+- Owner support requests and admin support replies/statuses; sample owner directory and account-provisioning form.
+- English/Urdu translations, server-set document direction, Radix direction context and locale cookie.
+- Responsive layouts and keyboard-accessible primitives; browser/device acceptance remains pending.
 
-## Development sequence
-1. Documentation foundation.
-2. Dashboard UI/UX using shadcn/ui, shared design tokens, English/Urdu RTL and responsive layouts.
-3. Real accounts, storage and integration work in separately scoped changes.
-4. AI/WhatsApp agent behavior after requirements are clarified.
+All records are sample data. Changes live in React memory for the visit and reset on reload. Language preference persists in a cookie. Switching language refreshes server context while retaining the mounted client workspace. Real authentication, shop isolation, Supabase, Meta and AI are not integrated. Do not enter actual passwords or private customer information in this preview.
 
-## Local starter
-Use npm with the existing package-lock.json:
+## Run
 ```sh
 npm ci
 npm run dev
+npm run typecheck
+npm run lint
+npm test
 npm run build
 ```
-These are the starter commands; this documentation change has not run or verified application builds.
+
+Open localhost:3000. Use the preview form to enter owner setup; the role selector exposes the admin preview separately. Neither is authorization.
 
 ## Project guide
-- [PRD](PRD.md): requirements, acceptance criteria and open questions.
-- [Architecture essentials](ARCHITECTURE-ESSENTIALS.md): quick orientation.
-- [Architecture](ARCHITECTURE.md): current and proposed boundaries.
-- [Design system](DESIGN.md): components, tokens and bilingual interaction.
-- [Decisions](DECISIONS.md): significant choices and status.
-- [Research](RESEARCH.md): evidence and unresolved external facts.
-- [Agent instructions](AGENTS.md): mandatory contributor rules.
-- [Claude entry point](CLAUDE.md): routes to shared guidance.
+[PRD](PRD.md) · [Architecture](ARCHITECTURE.md) · [Essentials](ARCHITECTURE-ESSENTIALS.md) · [Design](DESIGN.md) · [Decisions](DECISIONS.md) · [Frontend review](FRONTEND-REVIEW.md) · [Research](RESEARCH.md) · [Agent rules](AGENTS.md) · [Claude entry](CLAUDE.md)
 
-Deployment target: Vercel. Planned identity/data provider: Supabase. Neither is configured by this PR.
+## Dependencies and attribution
+shadcn primitives were retrieved from the official shadcn-ui/ui new-york-v4 registry after the CLI registry endpoint failed in the build environment. Source imports were adapted locally; see SHADCN-LICENSE.md. Components use Radix direction context. Spreadsheet parsing uses lazy-loaded Papa Parse and ExcelJS (with a patched uuid override), is client-only, and rejects formula cells; production import security/limits and parser maintenance must be reviewed before accepting untrusted production files.
+
+Deployment target remains Vercel. No deployment or merge is performed by this UI change.

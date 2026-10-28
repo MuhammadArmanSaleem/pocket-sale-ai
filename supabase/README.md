@@ -10,6 +10,7 @@ Run from repository root. Supabase CLI runs timestamped filenames in this order 
 2. `migrations/20261028191252_tenant_security.sql` — narrow client grants, owner isolation, admin directory/support access and support reply state updates.
 3. `migrations/20261028191259_product_storage.sql` — private product-image bucket and object access policies.
 4. `migrations/20261028203600_current_access.sql` — authenticated access lookup using trusted admin membership and shop status.
+5. `migrations/20261028204118_atomic_product_create.sql` — atomic owner product and variant creation.
 
 Do not run a later file first. These are one-time forward migrations, not repeatedly executable scripts. Create changes with `npx supabase migration new descriptive_name`; never edit applied migration history. The files were generated with CLI 2.122.0. No seed data or credentials are included.
 
@@ -53,7 +54,7 @@ Child records carry `shop_id` and composite foreign keys so a variant, photo, or
 
 An owner can manage only their active shop's catalogue, policies, drafts and support. They cannot change ownership, active state, author identity or admin membership. A disabled shop retains its own profile/shop directory read but loses catalogue/files/support access. Admin can read the owner directory and all support tickets, reply and change ticket status. Admin receives no general customer-order or catalogue access. Trusted server credentials bypass RLS and require separate server authorization.
 
-Owners hide products rather than hard-delete them. Unreferenced variants/images may be removed; draft-referenced variants are protected. Deleting a draft deletes its items. No account/shop deletion endpoint is defined. Product creation with variants and imports should later be implemented as server transactions; this schema does not yet enforce a minimum variant count or implement import reconciliation. `is_visible` is stored only; there is no buyer/public catalogue access yet.
+Owners hide products rather than hard-delete them. Unreferenced variants/images may be removed; draft-referenced variants are protected. Deleting a draft deletes its items. No account/shop deletion endpoint is defined. Product creation can use `create_product_with_variants`, which atomically creates a product and its variants and enforces a minimum variant count for that RPC. Direct table inserts are still allowed by existing grants, and edits and imports need their own transactional flows; import reconciliation remains unimplemented. `is_visible` is stored only; there is no buyer/public catalogue access yet.
 
 ## Provisioning (trusted backend work still pending)
 

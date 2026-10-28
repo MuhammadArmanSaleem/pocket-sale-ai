@@ -33,6 +33,7 @@ try {
  await denied('select * from public.products');
  await denied('select * from public.profiles');
  await denied('select * from public.current_access()');
+ await denied(`select public.create_product_with_variants('${id(11)}','Test','','',true,'[]')`);
  await login(4);
  await eq('select count(*)::int as value from public.current_access()', 0);
  await login(1);
@@ -40,6 +41,13 @@ try {
  await eq('select shop_active as value from public.current_access()', true);
  await eq('select count(*)::int as value from public.products',1);
  await eq('select count(*)::int as value from public.shops',1);
+ await denied(`select public.create_product_with_variants('${id(12)}','Intrusion','','',true,'[{"size":"M","colour":"red","price":1,"stock":1}]')`);
+ await denied(`select public.create_product_with_variants('${id(11)}','Rollback test','','',true,'[{"size":"M","colour":"red","price":1,"stock":1},{"size":" M ","colour":"RED","price":1,"stock":2}]')`);
+ await eq(`select count(*)::int as value from public.products where name='Rollback test'`,0);
+ await denied(`select public.create_product_with_variants('${id(11)}','Invalid stock','','',true,'[{"size":"M","colour":"red","price":1,"stock":1.5}]')`);
+ await eq(`select count(*)::int as value from public.products where name='Invalid stock'`,0);
+ await db.exec(`select public.create_product_with_variants('${id(11)}','Created atomically','','',true,'[{"size":"S","colour":"red","price":12.50,"stock":0}]')`);
+ await eq(`select count(*)::int as value from public.product_variants where size='S' and colour='red'`,1);
  await denied(`insert into public.products(shop_id,name) values('${id(12)}','Intrusion')`);
  await eq(`with changed as (update public.products set name='Intrusion' where id='${id(22)}' returning id) select count(*)::int as value from changed`,0);
  await denied(`update public.shops set owner_user_id='${id(2)}' where id='${id(11)}'`);

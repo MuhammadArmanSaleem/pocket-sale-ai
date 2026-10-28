@@ -154,3 +154,9 @@ export interface DuplicateVariant {
   size: string;
   colour: string;
 }
+
+export type AccountAccess =
+  | { role: "admin" }
+  | { role: "owner"; shopId: string }
+  | { role: "suspended" }
+  | { role: "unprovisioned" };

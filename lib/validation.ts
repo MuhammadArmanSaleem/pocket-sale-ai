@@ -1,4 +1,5 @@
 import * as yup from "yup";
+import { MIN_NEW_PASSWORD_LENGTH, MAX_PASSWORD_BYTES } from "./constants";
 
 // Login checks format and presence only. Password policy applies at creation,
 // while authentication must be performed by the server.
@@ -43,4 +44,10 @@ export const supportReplySchema = yup.object({
 export const adminTicketStatusSchema = yup.object({
   ticketId: yup.string().uuid().required(),
   status: yup.mixed<"open" | "waiting" | "resolved">().oneOf(["open", "waiting", "resolved"]).required(),
+}).noUnknown();
+
+export const passwordChangeSchema = yup.object({
+  currentPassword: yup.string().required().max(1024),
+  newPassword: yup.string().required().min(MIN_NEW_PASSWORD_LENGTH).test("bytes", "Password too long", value => value === undefined || new TextEncoder().encode(value).length <= MAX_PASSWORD_BYTES),
+  confirmPassword: yup.string().required().oneOf([yup.ref("newPassword")]),
 }).noUnknown();

@@ -1,4 +1,11 @@
 const en = {
+  currentPassword: "Current password",
+  newPassword: "New password",
+  confirmPassword: "Confirm new password",
+  passwordRequirements: "Use at least 12 characters and no more than 72 UTF-8 bytes.",
+  passwordInvalid: "Check the password length and make sure both new passwords match.",
+  passwordChangeFailed: "Password could not be changed. Check your current password or try again later.",
+  passwordChanged: "Password changed.",
   accountUnavailableTitle: "Account access unavailable",
   accountSuspended: "This shop is suspended. Contact an administrator.",
   accountNotProvisioned: "This account has not been provisioned. Contact an administrator.",

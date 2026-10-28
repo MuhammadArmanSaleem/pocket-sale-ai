@@ -1,5 +1,12 @@
 import type en from "./en";
 const ur: Record<keyof typeof en, string> = {
+  currentPassword: "موجودہ پاس ورڈ",
+  newPassword: "نیا پاس ورڈ",
+  confirmPassword: "نئے پاس ورڈ کی تصدیق",
+  passwordRequirements: "کم از کم 12 حروف اور زیادہ سے زیادہ 72 UTF-8 بائٹس استعمال کریں۔",
+  passwordInvalid: "پاس ورڈ کی لمبائی اور دونوں نئے پاس ورڈ کی مطابقت چیک کریں۔",
+  passwordChangeFailed: "پاس ورڈ تبدیل نہیں ہوا۔ موجودہ پاس ورڈ چیک کریں یا بعد میں کوشش کریں۔",
+  passwordChanged: "پاس ورڈ تبدیل ہو گیا۔",
   accountUnavailableTitle: "اکاؤنٹ کی رسائی دستیاب نہیں",
   accountSuspended: "یہ دکان معطل ہے۔ منتظم سے رابطہ کریں۔",
   accountNotProvisioned: "یہ اکاؤنٹ ابھی تیار نہیں ہوا۔ منتظم سے رابطہ کریں۔",

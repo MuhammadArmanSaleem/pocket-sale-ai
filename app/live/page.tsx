@@ -35,6 +35,7 @@ export default async function LiveCatalogue() {
           <SupportForm ticketId={ticket.id} />
         </article>)}
       </section>
+      <Link href="/account">{t("changeLogin")}</Link>
       <Link href="/">{t("backToPreview")}</Link>
     </main>
   );

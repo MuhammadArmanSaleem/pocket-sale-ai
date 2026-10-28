@@ -89,3 +89,7 @@ References reviewed: [RLS](https://supabase.com/docs/guides/database/postgres/ro
 Copy `.env.example` to `.env.local` and set the project's public URL and publishable key. Do not commit `.env.local` or put secret/service-role keys in public variables. `/auth-check` exercises sign-in and sign-out using Supabase Auth; it is not the production login or a role check. Next.js proxy refreshes session cookies. The preview dashboard still accepts demo credentials and must never be treated as protected or deployed as a production workspace.
 
 Before production: disable hosted public signup, provision trusted users, implement server-verified roles and account status, replace preview entry, add rate limits, MFA and reset flows, and test real authenticated sessions and tenant isolation. No migrations are applied by the SSR client setup.
+
+## Password change (work in progress)
+
+The authenticated account page checks the current password with a separate, non-persisted Auth client and revokes that verification session before updating the current session. The application currently requires a minimum of 12 characters and maximum 72 UTF-8 bytes for new passwords; hosted Auth policy may be stricter. Configure hosted current-password and secure-password-change settings deliberately. Email nonce reauthentication, password reset, distributed rate limiting and MFA are not implemented by this path. Actual Auth behaviour has not been integration-tested.

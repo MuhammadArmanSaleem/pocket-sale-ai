@@ -25,3 +25,10 @@ Scope: first UI preview and fixes to the five review findings. This is an explic
 
 ## Decision
 Keep PR draft until UI/browser acceptance is complete. No merge/deployment, account authorization or live-service integration is performed by these fixes.
+
+## Second review fixes
+- Product photo reads now expose loading status, disable further selection and Save, and guard form submission synchronously while a read is pending. This prevents a product being saved before selected photos are ready.
+- Common price is controlled state, retained when same-price mode is toggled off and on.
+- Support details derive from the filtered list; changing status filters clears selection and reply state so an out-of-filter query cannot remain open.
+- Owner name and business phone are controlled workspace state, retained when returning from connection to setup. Continue validates trimmed setup fields and updates the sample shop name/owner record. No backend persistence is implied.
+- Rechecked strict TypeScript, ESLint, all 10 existing import tests and production build: pass. These existing tests cover imports, not the four UI interactions; browser regression checks remain pending.

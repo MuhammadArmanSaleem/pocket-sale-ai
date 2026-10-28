@@ -37,7 +37,7 @@ export function Support({
       (!shopFilter || ti.shopId === shopFilter),
   );
   const filtered = own.filter((ti) => filter === "all" || ti.status === filter);
-  const ticket = own.find((ti) => ti.id === selected);
+  const ticket = filtered.find((ti) => ti.id === selected);
   return (
     <>
       <Heading
@@ -69,7 +69,11 @@ export function Support({
       <div className="mb-4 flex flex-wrap gap-2">
         <Button
           variant={filter === "all" ? "secondary" : "ghost"}
-          onClick={() => setFilter("all")}
+          onClick={() => {
+            setFilter("all");
+            setSelected(null);
+            setReply("");
+          }}
         >
           {t("viewAll")}
         </Button>
@@ -77,7 +81,11 @@ export function Support({
           <Button
             variant={filter === s ? "secondary" : "ghost"}
             key={s}
-            onClick={() => setFilter(s)}
+            onClick={() => {
+              setFilter(s);
+              setSelected(null);
+              setReply("");
+            }}
           >
             {t(s)}
           </Button>

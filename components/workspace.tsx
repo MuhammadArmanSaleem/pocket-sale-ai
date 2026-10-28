@@ -53,7 +53,7 @@ import {
   activityBars,
   roleOptions,
 } from "@/lib/data";
-import { isLocale } from "@/lib/constants";
+import { isLocale, SHOP_ID } from "@/lib/constants";
 import type {
   Page,
   Role,
@@ -73,6 +73,8 @@ export function Workspace() {
   const [page, setPage] = useState<Page>("overview");
   const [mobile, setMobile] = useState(false);
   const [shopName, setShopName] = useState("Studio Clothing");
+  const [ownerName, setOwnerName] = useState("Ahmed Raza");
+  const [businessPhone, setBusinessPhone] = useState("");
   const [connected, setConnected] = useState(false);
   const [failed, setFailed] = useState(false);
   const [policies, setPolicies] = useState(previewPolicies);
@@ -221,7 +223,24 @@ export function Workspace() {
                   className="grid gap-5"
                   onSubmit={(e) => {
                     e.preventDefault();
-                    if (shopName.trim()) setStage("connection");
+                    if (
+                      shopName.trim() &&
+                      ownerName.trim() &&
+                      businessPhone.trim()
+                    ) {
+                      setShops((items) =>
+                        items.map((shop) =>
+                          shop.id === SHOP_ID
+                            ? {
+                                ...shop,
+                                name: shopName.trim(),
+                                owner: ownerName.trim(),
+                              }
+                            : shop,
+                        ),
+                      );
+                      setStage("connection");
+                    }
                   }}
                 >
                   <Field
@@ -233,7 +252,8 @@ export function Workspace() {
                   />
                   <Field
                     label={t("ownerName")}
-                    defaultValue="Ahmed Raza"
+                    value={ownerName}
+                    onChange={(e) => setOwnerName(e.target.value)}
                     required
                   />
                   <Field
@@ -241,6 +261,8 @@ export function Workspace() {
                     type="tel"
                     dir="ltr"
                     placeholder="+92"
+                    value={businessPhone}
+                    onChange={(e) => setBusinessPhone(e.target.value)}
                     required
                   />
                   <Button>

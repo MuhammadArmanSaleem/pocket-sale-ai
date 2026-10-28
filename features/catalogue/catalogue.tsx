@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useRef } from "react";
 import Image from "next/image";
 import { useTranslations } from "next-intl";
 import { Plus, Upload, Shirt, ImagePlus, Trash2, Search } from "lucide-react";
@@ -262,6 +262,11 @@ function ProductEditor({ product, onCancel, onSave }: ProductEditorProps) {
       ],
   );
   const [same, setSame] = useState(false);
+  const [commonPrice, setCommonPrice] = useState(
+    product?.variants[0]?.price ?? 1,
+  );
+  const [photosLoading, setPhotosLoading] = useState(false);
+  const photoReadPending = useRef(false);
   const [photos, setPhotos] = useState<string[]>(product?.photos ?? []);
   const [visible, setVisible] = useState(product?.visible ?? true);
   const [error, setError] = useState("");
@@ -275,7 +280,8 @@ function ProductEditor({ product, onCancel, onSave }: ProductEditorProps) {
         e.preventDefault();
         const f = new FormData(e.currentTarget);
         const name = String(f.get("name") ?? "").trim();
-        const common = Number(f.get("common"));
+        if (photoReadPending.current) return;
+        const common = commonPrice;
         const actual = variants.map((v) => ({
           ...v,
           size: v.size.trim(),
@@ -345,7 +351,8 @@ function ProductEditor({ product, onCancel, onSave }: ProductEditorProps) {
           type="number"
           min="0.01"
           step="0.01"
-          defaultValue={product?.variants[0]?.price ?? 1}
+          value={commonPrice}
+          onChange={(e) => setCommonPrice(Number(e.target.value))}
           required
         />
       )}
@@ -421,7 +428,9 @@ function ProductEditor({ product, onCancel, onSave }: ProductEditorProps) {
           type="file"
           accept="image/png,image/jpeg,image/webp"
           multiple
+          disabled={photosLoading}
           onChange={async (e) => {
+            if (photoReadPending.current) return;
             const files = Array.from(e.target.files ?? []);
             if (
               files.length + photos.length > MAX_PHOTOS ||
@@ -434,6 +443,8 @@ function ProductEditor({ product, onCancel, onSave }: ProductEditorProps) {
               setError(t("photoError"));
               return;
             }
+            photoReadPending.current = true;
+            setPhotosLoading(true);
             const images = await Promise.all(
               files.map(
                 (f) =>
@@ -448,6 +459,8 @@ function ProductEditor({ product, onCancel, onSave }: ProductEditorProps) {
                   }),
               ),
             ).catch(() => null);
+            photoReadPending.current = false;
+            setPhotosLoading(false);
             if (!images) {
               setError(t("photoError"));
               return;
@@ -495,11 +508,16 @@ function ProductEditor({ product, onCancel, onSave }: ProductEditorProps) {
           {error}
         </p>
       )}
+      {photosLoading && (
+        <p role="status" className="muted">
+          {t("upload")}…
+        </p>
+      )}
       <div className="form-actions">
         <Button variant="outline" type="button" onClick={onCancel}>
           {t("cancel")}
         </Button>
-        <Button>{t("save")}</Button>
+        <Button disabled={photosLoading}>{t("save")}</Button>
       </div>
     </form>
   );

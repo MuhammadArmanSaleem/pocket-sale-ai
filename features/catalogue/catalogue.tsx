@@ -22,7 +22,7 @@ import { MAX_PHOTOS, MAX_PHOTO_BYTES, PHOTO_MIME_TYPES } from "@/lib/constants";
 import type {
   Product,
   ProductPhoto,
-  Variant,
+  VariantDraft,
   CatalogueProps,
   ProductEditorProps,
 } from "@/lib/types";
@@ -303,22 +303,22 @@ function ProductEditor({
   onDirty,
 }: ProductEditorProps) {
   const t = useTranslations();
-  const [variants, setVariants] = useState<Variant[]>(
+  const [variants, setVariants] = useState<VariantDraft[]>(
     () =>
-      product?.variants.map((v) => ({ ...v })) ?? [
-        { ...newVariant, id: crypto.randomUUID() },
+      product?.variants.map((v) => ({ ...v, price: String(v.price), stock: String(v.stock) })) ?? [
+        { ...newVariant, price: "", stock: "", id: crypto.randomUUID() },
       ],
   );
   const [same, setSame] = useState(false);
   const [commonPrice, setCommonPrice] = useState(
-    product?.variants[0]?.price ?? 1,
+    String(product?.variants[0]?.price ?? ""),
   );
   const [photosLoading, setPhotosLoading] = useState(false);
   const photoReadPending = useRef(false);
   const [photos, setPhotos] = useState<ProductPhoto[]>(product?.photos ?? []);
   const [visible, setVisible] = useState(product?.visible ?? true);
   const [error, setError] = useState("");
-  function update(id: string, patch: Partial<Variant>) {
+  function update(id: string, patch: Partial<VariantDraft>) {
     setError("");
     onDirty();
     setVariants((vs) => vs.map((v) => (v.id === id ? { ...v, ...patch } : v)));
@@ -335,12 +335,13 @@ function ProductEditor({
         const f = new FormData(e.currentTarget);
         const name = String(f.get("name") ?? "").trim();
         if (photoReadPending.current) return;
-        const common = commonPrice;
+        const common = commonPrice.trim() === "" ? NaN : Number(commonPrice);
         const actual = variants.map((v) => ({
           ...v,
           size: v.size.trim(),
           colour: v.colour.trim(),
-          price: same ? common : v.price,
+          price: same ? common : v.price.trim() === "" ? NaN : Number(v.price),
+          stock: v.stock.trim() === "" ? NaN : Number(v.stock),
         }));
         const duplicate = findDuplicateVariant(actual);
         if (duplicate) {
@@ -422,7 +423,8 @@ function ProductEditor({
           min="0.01"
           step="0.01"
           value={commonPrice}
-          onChange={(e) => setCommonPrice(Number(e.target.value))}
+          onChange={(e) => setCommonPrice(e.target.value)}
+          onBlur={(e) => setCommonPrice(e.target.value.replace(/^0+(?=\d)/, ""))}
           required
         />
       )}
@@ -436,7 +438,7 @@ function ProductEditor({
             onDirty();
             setVariants((v) => [
               ...v,
-              { ...newVariant, id: crypto.randomUUID() },
+              { ...newVariant, price: "", stock: "", id: crypto.randomUUID() },
             ]);
           }}
         >
@@ -468,7 +470,8 @@ function ProductEditor({
               min="0.01"
               step="0.01"
               value={v.price}
-              onChange={(e) => update(v.id, { price: Number(e.target.value) })}
+              onChange={(e) => update(v.id, { price: e.target.value })}
+              onBlur={(e) => update(v.id, { price: e.target.value.replace(/^0+(?=\d)/, "") })}
               required
             />
           )}
@@ -478,7 +481,8 @@ function ProductEditor({
             min={0}
             step={1}
             value={v.stock}
-            onChange={(e) => update(v.id, { stock: Number(e.target.value) })}
+            onChange={(e) => update(v.id, { stock: e.target.value })}
+            onBlur={(e) => update(v.id, { stock: e.target.value.replace(/^0+(?=\d)/, "") })}
             required
           />
           <Button

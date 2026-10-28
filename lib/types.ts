@@ -18,6 +18,10 @@ export interface Variant {
   price: number;
   stock: number;
 }
+export interface VariantDraft extends Omit<Variant, "price" | "stock"> {
+  price: string;
+  stock: string;
+}
 export interface ProductPhoto {
   id: string;
   src: string;

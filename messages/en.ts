@@ -1,4 +1,9 @@
 const en = {
+  unsavedTitle: "Keep your changes?",
+  unsavedDescription:
+    "You have unsaved product changes. Keep editing or discard them to close this form.",
+  keepEditing: "Keep editing",
+  discardChanges: "Discard changes",
   brand: "PocketSales",
   tagline: "A little more room to grow.",
   workspace: "Seller workspace",

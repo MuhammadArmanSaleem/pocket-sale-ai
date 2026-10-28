@@ -78,6 +78,7 @@ export interface CatalogueProps {
   notify: (s: string) => void;
 }
 export interface ProductEditorProps {
+  onDirty: () => void;
   product: Product | null;
   onCancel: () => void;
   onSave: (p: Product) => void;

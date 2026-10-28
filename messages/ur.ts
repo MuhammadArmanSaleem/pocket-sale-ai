@@ -1,5 +1,10 @@
 import type en from "./en";
 const ur: Record<keyof typeof en, string> = {
+  unsavedTitle: "اپنی تبدیلیاں رکھنا چاہتے ہیں؟",
+  unsavedDescription:
+    "مصنوعات کی تبدیلیاں ابھی محفوظ نہیں ہوئیں۔ ترمیم جاری رکھیں یا تبدیلیاں ختم کرکے فارم بند کریں۔",
+  keepEditing: "ترمیم جاری رکھیں",
+  discardChanges: "تبدیلیاں ختم کریں",
   brand: "پاکٹ سیلز",
   tagline: "ترقی کے لیے تھوڑی سی آسانی۔",
   workspace: "دکاندار کا ورک اسپیس",

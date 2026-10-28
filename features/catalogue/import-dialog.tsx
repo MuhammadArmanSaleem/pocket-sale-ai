@@ -1,6 +1,7 @@
 "use client";
 import { useState, useRef } from "react";
 import { useTranslations } from "next-intl";
+import { Money } from "@/components/shared";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -124,9 +125,53 @@ export function ImportDialog({ open, setOpen, onImport }: ImportDialogProps) {
               })}
             </p>
             {rows.map((p) => (
-              <div key={p.id} className="border-b py-2 text-sm">
-                {p.name} · {p.variants.length} {t("variants")}
-              </div>
+              <section key={p.id} className="border-b py-4 last:border-0">
+                <h3 className="font-semibold break-words">{p.name}</h3>
+                <p className="mb-3 text-xs">
+                  {p.category} · {p.variants.length} {t("variants")}
+                </p>
+                <div className="grid gap-3 sm:grid-cols-2">
+                  {p.variants.map((v) => (
+                    <dl
+                      key={v.id}
+                      className="grid grid-cols-2 gap-2 rounded-lg border bg-background p-3 text-sm"
+                    >
+                      <div>
+                        <dt className="text-xs text-muted-foreground">
+                          {t("size")}
+                        </dt>
+                        <dd className="break-words">
+                          <bdi>{v.size}</bdi>
+                        </dd>
+                      </div>
+                      <div>
+                        <dt className="text-xs text-muted-foreground">
+                          {t("colour")}
+                        </dt>
+                        <dd className="break-words">
+                          <bdi>{v.colour}</bdi>
+                        </dd>
+                      </div>
+                      <div>
+                        <dt className="text-xs text-muted-foreground">
+                          {t("price")}
+                        </dt>
+                        <dd>
+                          <Money value={v.price} />
+                        </dd>
+                      </div>
+                      <div>
+                        <dt className="text-xs text-muted-foreground">
+                          {t("stock")}
+                        </dt>
+                        <dd>
+                          <bdi>{v.stock}</bdi> {t("units")}
+                        </dd>
+                      </div>
+                    </dl>
+                  ))}
+                </div>
+              </section>
             ))}
           </div>
         )}

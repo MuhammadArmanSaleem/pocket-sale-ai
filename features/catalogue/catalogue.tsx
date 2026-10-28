@@ -39,6 +39,12 @@ export function Catalogue({
   const [editing, setEditing] = useState<Product | null>(null);
   const [open, setOpen] = useState(false);
   const [importOpen, setImportOpen] = useState(false);
+  const dirty = useRef(false);
+  const [discardOpen, setDiscardOpen] = useState(false);
+  function requestClose() {
+    if (dirty.current) setDiscardOpen(true);
+    else setOpen(false);
+  }
   const filtered = products.filter(
     (p) =>
       (p.name + " " + p.category).toLowerCase().includes(query.toLowerCase()) &&
@@ -48,6 +54,8 @@ export function Catalogue({
         (filter === "low" && p.variants.some((v) => v.stock <= 3))),
   );
   function edit(p: Product | null) {
+    dirty.current = false;
+    setDiscardOpen(false);
     setEditing(p);
     setOpen(true);
   }
@@ -213,7 +221,13 @@ export function Catalogue({
           </form>
         </TabsContent>
       </Tabs>
-      <Dialog open={open} onOpenChange={setOpen}>
+      <Dialog
+        open={open}
+        onOpenChange={(value) => {
+          if (!value) requestClose();
+          else setOpen(true);
+        }}
+      >
         <DialogContent
           showCloseButton={false}
           className="max-h-[90dvh] overflow-y-auto sm:max-w-3xl"
@@ -228,18 +242,45 @@ export function Catalogue({
             <ProductEditor
               key={editing?.id ?? "new"}
               product={editing}
-              onCancel={() => setOpen(false)}
+              onDirty={() => {
+                dirty.current = true;
+              }}
+              onCancel={requestClose}
               onSave={(p) => {
                 onChange(
                   editing
                     ? products.map((x) => (x.id === p.id ? p : x))
                     : [...products, p],
                 );
+                dirty.current = false;
                 setOpen(false);
                 notify(t("saved"));
               }}
             />
           )}
+        </DialogContent>
+      </Dialog>
+      <Dialog open={discardOpen} onOpenChange={setDiscardOpen}>
+        <DialogContent showCloseButton={false}>
+          <DialogHeader>
+            <DialogTitle>{t("unsavedTitle")}</DialogTitle>
+            <DialogDescription>{t("unsavedDescription")}</DialogDescription>
+          </DialogHeader>
+          <div className="form-actions">
+            <Button variant="outline" onClick={() => setDiscardOpen(false)}>
+              {t("keepEditing")}
+            </Button>
+            <Button
+              variant="destructive"
+              onClick={() => {
+                dirty.current = false;
+                setDiscardOpen(false);
+                setOpen(false);
+              }}
+            >
+              {t("discardChanges")}
+            </Button>
+          </div>
         </DialogContent>
       </Dialog>
       <ImportDialog
@@ -253,7 +294,12 @@ export function Catalogue({
     </>
   );
 }
-function ProductEditor({ product, onCancel, onSave }: ProductEditorProps) {
+function ProductEditor({
+  product,
+  onCancel,
+  onSave,
+  onDirty,
+}: ProductEditorProps) {
   const t = useTranslations();
   const [variants, setVariants] = useState<Variant[]>(
     () =>
@@ -271,11 +317,13 @@ function ProductEditor({ product, onCancel, onSave }: ProductEditorProps) {
   const [visible, setVisible] = useState(product?.visible ?? true);
   const [error, setError] = useState("");
   function update(id: string, patch: Partial<Variant>) {
+    onDirty();
     setVariants((vs) => vs.map((v) => (v.id === id ? { ...v, ...patch } : v)));
   }
   return (
     <form
       className="grid gap-5"
+      onChangeCapture={onDirty}
       onSubmit={(e) => {
         e.preventDefault();
         const f = new FormData(e.currentTarget);
@@ -341,7 +389,13 @@ function ProductEditor({ product, onCancel, onSave }: ProductEditorProps) {
         </Label>
       </div>
       <Label className="flex items-center gap-3">
-        <Switch checked={same} onCheckedChange={setSame} />
+        <Switch
+          checked={same}
+          onCheckedChange={(value) => {
+            onDirty();
+            setSame(value);
+          }}
+        />
         {t("samePrice")}
       </Label>
       {same && (
@@ -362,12 +416,13 @@ function ProductEditor({ product, onCancel, onSave }: ProductEditorProps) {
           type="button"
           variant="outline"
           size="sm"
-          onClick={() =>
+          onClick={() => {
+            onDirty();
             setVariants((v) => [
               ...v,
               { ...newVariant, id: crypto.randomUUID() },
-            ])
-          }
+            ]);
+          }}
         >
           <Plus />
           {t("addVariant")}
@@ -416,7 +471,10 @@ function ProductEditor({ product, onCancel, onSave }: ProductEditorProps) {
             className="self-end"
             disabled={variants.length === 1}
             aria-label={t("remove")}
-            onClick={() => setVariants((vs) => vs.filter((x) => x.id !== v.id))}
+            onClick={() => {
+              onDirty();
+              setVariants((vs) => vs.filter((x) => x.id !== v.id));
+            }}
           >
             <Trash2 />
           </Button>
@@ -491,7 +549,10 @@ function ProductEditor({ product, onCancel, onSave }: ProductEditorProps) {
                 size="icon"
                 variant="secondary"
                 aria-label={t("remove")}
-                onClick={() => setPhotos((p) => p.filter((_, j) => j !== i))}
+                onClick={() => {
+                  onDirty();
+                  setPhotos((p) => p.filter((_, j) => j !== i));
+                }}
               >
                 <Trash2 />
               </Button>
@@ -500,7 +561,13 @@ function ProductEditor({ product, onCancel, onSave }: ProductEditorProps) {
         )}
       </div>
       <Label className="flex items-center gap-3">
-        <Switch checked={visible} onCheckedChange={setVisible} />
+        <Switch
+          checked={visible}
+          onCheckedChange={(value) => {
+            onDirty();
+            setVisible(value);
+          }}
+        />
         {t("visibility")}
       </Label>
       {error && (

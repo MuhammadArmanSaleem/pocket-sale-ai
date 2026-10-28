@@ -32,3 +32,8 @@ Keep PR draft until UI/browser acceptance is complete. No merge/deployment, acco
 - Support details derive from the filtered list; changing status filters clears selection and reply state so an out-of-filter query cannot remain open.
 - Owner name and business phone are controlled workspace state, retained when returning from connection to setup. Continue validates trimmed setup fields and updates the sample shop name/owner record. No backend persistence is implied.
 - Rechecked strict TypeScript, ESLint, all 10 existing import tests and production build: pass. These existing tests cover imports, not the four UI interactions; browser regression checks remain pending.
+
+## Third review fixes
+- Dirty product forms now route Cancel, Escape and outside dismissal through a localized keep-editing/discard prompt. Untouched forms close normally; successful save clears dirty state. Input changes, price-mode/visibility switches, variant changes and photo actions mark the draft dirty.
+- Import review now shows category and every variant's size, colour, PKR price and exact stock in responsive definition-list cards before confirmation.
+- Strict type checking, lint, 10 existing import tests and production build pass after these changes. New modal interaction/focus behavior still requires browser acceptance; no additional UI-test coverage is claimed.

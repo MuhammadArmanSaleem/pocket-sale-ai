@@ -18,6 +18,10 @@ export interface Variant {
   price: number;
   stock: number;
 }
+export interface ProductPhoto {
+  id: string;
+  src: string;
+}
 export interface Product {
   id: string;
   name: string;
@@ -25,7 +29,7 @@ export interface Product {
   description: string;
   visible: boolean;
   variants: Variant[];
-  photos: string[];
+  photos: ProductPhoto[];
 }
 export interface Shop {
   id: string;

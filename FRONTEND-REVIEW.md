@@ -37,3 +37,6 @@ Keep PR draft until UI/browser acceptance is complete. No merge/deployment, acco
 - Dirty product forms now route Cancel, Escape and outside dismissal through a localized keep-editing/discard prompt. Untouched forms close normally; successful save clears dirty state. Input changes, price-mode/visibility switches, variant changes and photo actions mark the draft dirty.
 - Import review now shows category and every variant's size, colour, PKR price and exact stock in responsive definition-list cards before confirmation.
 - Strict type checking, lint, 10 existing import tests and production build pass after these changes. New modal interaction/focus behavior still requires browser acceptance; no additional UI-test coverage is claimed.
+
+## Photo identity correction
+Product photos now use a typed {id, src} record. Each selected file receives a unique ID; rendering and deletion use that ID so identical image contents do not produce duplicate React keys. Catalogue thumbnails read the photo source explicitly. Typecheck/lint and all 10 existing import tests pass; production build result is recorded in the handoff. Duplicate-photo browser interaction is still unverified.

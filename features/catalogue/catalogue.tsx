@@ -21,6 +21,7 @@ import { productFilters, newVariant } from "@/lib/data";
 import { MAX_PHOTOS, MAX_PHOTO_BYTES, PHOTO_MIME_TYPES } from "@/lib/constants";
 import type {
   Product,
+  ProductPhoto,
   Variant,
   CatalogueProps,
   ProductEditorProps,
@@ -115,7 +116,7 @@ export function Catalogue({
                       unoptimized
                       width={640}
                       height={360}
-                      src={p.photos[0]}
+                      src={p.photos[0].src}
                       alt={p.name}
                       className="size-full object-cover"
                     />
@@ -313,7 +314,7 @@ function ProductEditor({
   );
   const [photosLoading, setPhotosLoading] = useState(false);
   const photoReadPending = useRef(false);
-  const [photos, setPhotos] = useState<string[]>(product?.photos ?? []);
+  const [photos, setPhotos] = useState<ProductPhoto[]>(product?.photos ?? []);
   const [visible, setVisible] = useState(product?.visible ?? true);
   const [error, setError] = useState("");
   function update(id: string, patch: Partial<Variant>) {
@@ -523,7 +524,10 @@ function ProductEditor({
               setError(t("photoError"));
               return;
             }
-            setPhotos((p) => [...p, ...images]);
+            setPhotos((p) => [
+              ...p,
+              ...images.map((src) => ({ id: crypto.randomUUID(), src })),
+            ]);
           }}
         />
         <span className="muted">{t("photoHint")}</span>
@@ -534,13 +538,13 @@ function ProductEditor({
             <ImagePlus />
           </div>
         ) : (
-          photos.map((src, i) => (
-            <div key={src} className="relative">
+          photos.map((photo) => (
+            <div key={photo.id} className="relative">
               <Image
                 unoptimized
                 width={80}
                 height={80}
-                src={src}
+                src={photo.src}
                 alt={t("photos")}
                 className="size-20 rounded-lg object-cover"
               />
@@ -551,7 +555,7 @@ function ProductEditor({
                 aria-label={t("remove")}
                 onClick={() => {
                   onDirty();
-                  setPhotos((p) => p.filter((_, j) => j !== i));
+                  setPhotos((p) => p.filter((item) => item.id !== photo.id));
                 }}
               >
                 <Trash2 />

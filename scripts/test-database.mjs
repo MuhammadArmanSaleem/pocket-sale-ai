@@ -34,6 +34,7 @@ try {
  await denied('select * from public.products');
  await denied('select * from public.profiles');
  await denied('select * from public.current_access()');
+ await denied(`select public.create_support_ticket('${id(11)}','No','No')`);
  await denied(`select public.create_product_with_variants('${id(11)}','Test','','',true,'[]')`);
  await login(4);
  await eq('select count(*)::int as value from public.current_access()', 0);
@@ -66,8 +67,13 @@ try {
  await db.exec(`insert into public.order_draft_items(shop_id,draft_id,variant_id,quantity,product_name_snapshot,size_snapshot,colour_snapshot,unit_price_snapshot) values('${id(11)}','${draft}','${id(31)}',100,'Shirt A','L','Blue',300)`);
  await eq(`select stock_quantity as value from public.product_variants where id='${id(31)}'`,4);
  await denied(`insert into public.order_draft_items(shop_id,draft_id,variant_id,quantity,product_name_snapshot,size_snapshot,colour_snapshot,unit_price_snapshot) values('${id(11)}','${draft}','${id(32)}',1,'Other','M','White',300)`);
+ await denied(`select public.create_support_ticket('${id(12)}','Intrusion','Hi')`);
+ await denied(`select public.create_support_ticket('${id(11)}','Invalid ticket',' ')`);
+ await eq(`select count(*)::int as value from public.support_tickets where subject='Invalid ticket'`,0);
+ await db.exec(`select public.create_support_ticket('${id(11)}','Atomic support','First message')`);
+ await eq(`select count(*)::int as value from public.support_messages where body='First message'`,1);
  await db.exec(`insert into public.support_tickets(shop_id,subject) values('${id(11)}','Help');`);
- const ticket=(await db.query('select id from public.support_tickets')).rows[0].id;
+ const ticket=(await db.query("select id from public.support_tickets where subject='Help'")).rows[0].id;
  await denied(`insert into public.support_messages(shop_id,ticket_id,author_role,body) values('${id(11)}','${ticket}','admin','Forged')`);
  await eq(`with changed as (update public.support_tickets set status='resolved' returning id) select count(*)::int as value from changed`,0);
  await db.exec(`insert into public.support_messages(shop_id,ticket_id,author_role,body) values('${id(11)}','${ticket}','owner','Question')`);
@@ -85,7 +91,7 @@ try {
  await eq('select account_role as value from public.current_access()', 'admin');
  await eq('select count(*)::int as value from public.shops',2);
  await eq('select count(*)::int as value from public.products',0);
- await eq('select count(*)::int as value from public.support_tickets',1);
+ await eq('select count(*)::int as value from public.support_tickets',2);
  await db.exec(`insert into public.support_messages(shop_id,ticket_id,author_role,body) values('${id(11)}','${ticket}','admin','Reply')`);
  await eq(`select status as value from public.support_tickets where id='${ticket}'`,'waiting');
  await login(1);

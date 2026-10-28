@@ -24,3 +24,20 @@ export async function savePolicyAction(input: unknown): Promise<ProductCreateRes
     return { ok: false };
   }
 }
+
+export async function createSupportAction(input: unknown): Promise<ProductCreateResult> {
+  try {
+    const { createSupportTicket } = await import("@/lib/supabase/support");
+    await createSupportTicket(input);
+    revalidatePath("/live");
+    return { ok: true };
+  } catch { return { ok: false }; }
+}
+export async function replySupportAction(input: unknown): Promise<ProductCreateResult> {
+  try {
+    const { replyToSupportTicket } = await import("@/lib/supabase/support");
+    await replyToSupportTicket(input);
+    revalidatePath("/live");
+    return { ok: true };
+  } catch { return { ok: false }; }
+}

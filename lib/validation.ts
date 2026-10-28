@@ -30,3 +30,12 @@ export const shopPolicySchema = yup.object({
   deliveryCharge: yup.number().strict().min(0).max(9999999999.99).test("currency", "Invalid amount", value => value === undefined || Math.abs(value * 100 - Math.round(value * 100)) < 0.000001).required(),
   returnsPolicy: yup.string().max(2000).required().test("nonblank", "Required", value => Boolean(value?.trim())),
 }).noUnknown();
+
+export const supportTicketSchema = yup.object({
+  subject: yup.string().max(200).required().test("nonblank", "Required", value => Boolean(value?.trim())),
+  body: yup.string().max(3000).required().test("nonblank", "Required", value => Boolean(value?.trim())),
+}).noUnknown();
+export const supportReplySchema = yup.object({
+  ticketId: yup.string().uuid().required(),
+  body: yup.string().max(3000).required().test("nonblank", "Required", value => Boolean(value?.trim())),
+}).noUnknown();

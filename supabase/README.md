@@ -11,6 +11,7 @@ Run from repository root. Supabase CLI runs timestamped filenames in this order 
 3. `migrations/20261028191259_product_storage.sql` — private product-image bucket and object access policies.
 4. `migrations/20261028203600_current_access.sql` — authenticated access lookup using trusted admin membership and shop status.
 5. `migrations/20261028204118_atomic_product_create.sql` — atomic owner product and variant creation.
+6. `migrations/20261028210425_atomic_support_ticket.sql` — atomic owner ticket and first-message creation.
 
 Do not run a later file first. These are one-time forward migrations, not repeatedly executable scripts. Create changes with `npx supabase migration new descriptive_name`; never edit applied migration history. The files were generated with CLI 2.122.0. No seed data or credentials are included.
 

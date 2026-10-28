@@ -181,3 +181,6 @@ export interface ShopPolicyInput {
   deliveryCharge: number;
   returnsPolicy: string;
 }
+
+export interface SupportTicketInput { subject: string; body: string }
+export interface SupportReplyInput { ticketId: string; body: string }

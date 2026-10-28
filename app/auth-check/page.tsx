@@ -1,5 +1,6 @@
 import { createClient } from "@/lib/supabase/server";
-import { signIn, signOut } from "./actions";
+import { signOut } from "./actions";
+import { LoginForm } from "./login-form";
 
 export const dynamic = "force-dynamic";
 
@@ -18,12 +19,7 @@ export default async function AuthCheck({ searchParams }: { searchParams: Promis
           <button className="underline" type="submit">Sign out</button>
         </form>
       ) : (
-        <form action={signIn} className="grid gap-4">
-          <label>Email <input className="block w-full rounded border p-2" type="email" name="email" autoComplete="username" required /></label>
-          <label>Password <input className="block w-full rounded border p-2" type="password" name="password" autoComplete="current-password" required /></label>
-          <button className="rounded border p-2" type="submit">Sign in</button>
-          {signInError && <p role="alert">Unable to sign in. Check your credentials or contact the administrator.</p>}
-        </form>
+        <LoginForm failed={Boolean(signInError)} />
       )}
     </main>
   );

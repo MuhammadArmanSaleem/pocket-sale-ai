@@ -1,4 +1,5 @@
 const en = {
+  authFailed: "Unable to sign in. Check your credentials or contact the administrator.",
   invalidEmail: "Enter a valid email address.",
   requiredPassword: "Enter your password.",
   showPassword: "Show password",

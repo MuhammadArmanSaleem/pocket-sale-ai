@@ -13,3 +13,14 @@ export async function createProductAction(input: ProductCreateInput): Promise<Pr
     return { ok: false };
   }
 }
+
+export async function savePolicyAction(input: unknown): Promise<ProductCreateResult> {
+  try {
+    const { saveShopPolicy } = await import("@/lib/supabase/policies");
+    await saveShopPolicy(input);
+    revalidatePath("/live");
+    return { ok: true };
+  } catch {
+    return { ok: false };
+  }
+}

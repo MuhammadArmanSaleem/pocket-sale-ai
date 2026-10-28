@@ -175,3 +175,9 @@ export interface RealProductSummary {
   category: string;
   is_visible: boolean;
 }
+
+export interface ShopPolicyInput {
+  deliveryTime: string;
+  deliveryCharge: number;
+  returnsPolicy: string;
+}

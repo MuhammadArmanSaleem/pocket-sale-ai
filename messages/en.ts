@@ -1,4 +1,5 @@
 const en = {
+  policyMissing: "Shop policies are not configured. Contact an administrator.",
   signOutReal: "Sign out",
   catalogueUnavailable: "This catalogue is available to active shop owners only.",
   realCataloguePartial: "Early catalogue: create one variant per new product. Editing, photos and import are not connected yet.",

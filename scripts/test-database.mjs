@@ -27,6 +27,7 @@ try {
  insert into public.profiles(user_id,display_name) values('${id(1)}','Owner A'),('${id(2)}','Owner B'),('${id(3)}','Admin');
  insert into private.admin_users(user_id) values('${id(3)}');
  insert into public.shops(id,owner_user_id,name) values('${id(11)}','${id(1)}','A'),('${id(12)}','${id(2)}','B');
+ insert into public.shop_policies(shop_id,delivery_time,delivery_charge,returns_policy) values('${id(11)}','2 days',0,'A'),('${id(12)}','3 days',0,'B');
  insert into public.products(id,shop_id,name) values('${id(21)}','${id(11)}','Shirt A'),('${id(22)}','${id(12)}','Shirt B');
  insert into public.product_variants(id,shop_id,product_id,size,colour,unit_price,stock_quantity) values('${id(31)}','${id(11)}','${id(21)}','L','Blue',300,4),('${id(32)}','${id(12)}','${id(22)}','M','White',300,58);`);
  await db.exec('set role anon;');
@@ -41,6 +42,8 @@ try {
  await eq('select shop_active as value from public.current_access()', true);
  await eq('select count(*)::int as value from public.products',1);
  await eq('select count(*)::int as value from public.shops',1);
+ await eq(`with changed as (update public.shop_policies set returns_policy='Intrusion' where shop_id='${id(12)}' returning shop_id) select count(*)::int as value from changed`,0);
+ await eq(`with changed as (update public.shop_policies set returns_policy='Updated' where shop_id='${id(11)}' returning shop_id) select count(*)::int as value from changed`,1);
  await denied(`select public.create_product_with_variants('${id(12)}','Intrusion','','',true,'[{"size":"M","colour":"red","price":1,"stock":1}]')`);
  await denied(`select public.create_product_with_variants('${id(11)}','Rollback test','','',true,'[{"size":"M","colour":"red","price":1,"stock":1},{"size":" M ","colour":"RED","price":1,"stock":2}]')`);
  await eq(`select count(*)::int as value from public.products where name='Rollback test'`,0);

@@ -24,3 +24,9 @@ export const createProductSchema = yup.object({
     return new Set(combinations).size === combinations.length;
   }),
 }).noUnknown();
+
+export const shopPolicySchema = yup.object({
+  deliveryTime: yup.string().max(200).required().test("nonblank", "Required", value => Boolean(value?.trim())),
+  deliveryCharge: yup.number().strict().min(0).max(9999999999.99).test("currency", "Invalid amount", value => value === undefined || Math.abs(value * 100 - Math.round(value * 100)) < 0.000001).required(),
+  returnsPolicy: yup.string().max(2000).required().test("nonblank", "Required", value => Boolean(value?.trim())),
+}).noUnknown();

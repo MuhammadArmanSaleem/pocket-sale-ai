@@ -1,5 +1,6 @@
 import type en from "./en";
 const ur: Record<keyof typeof en, string> = {
+  policyMissing: "دکان کی پالیسیاں موجود نہیں ہیں۔ منتظم سے رابطہ کریں۔",
   signOutReal: "سائن آؤٹ",
   catalogueUnavailable: "یہ کیٹلاگ صرف فعال دکان کے مالکان کے لیے دستیاب ہے۔",
   realCataloguePartial: "ابتدائی کیٹلاگ: نئی مصنوعات میں ایک ویریئنٹ شامل کریں۔ ترمیم، تصاویر اور امپورٹ ابھی منسلک نہیں ہیں۔",

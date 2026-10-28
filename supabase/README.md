@@ -1,6 +1,6 @@
 # Database foundation
 
-This folder defines the first database structure. It does **not** connect the dashboard, implement login/provisioning endpoints, integrate WhatsApp/AI, or apply anything to a hosted project.
+This folder defines the first database structure. The dashboard still uses preview data. An isolated `/auth-check` development page can verify a Supabase email/password session, but does not grant dashboard authorization. Owner provisioning, dashboard access control, WhatsApp and AI remain unimplemented.
 
 ## Exact migration order
 
@@ -80,3 +80,9 @@ Support messages are append-only. A successful admin reply sets the ticket to `w
 This is not a hosted Supabase acceptance test: Auth issuance, PostgREST column grants, signed URLs, Storage uploads/content limits, Docker startup and concurrent writes still need end-to-end testing against a disposable Supabase project before wiring production UI. No database was deployed. UI remains in-memory.
 
 References reviewed: [RLS](https://supabase.com/docs/guides/database/postgres/row-level-security), [Storage access](https://supabase.com/docs/guides/storage/security/access-control), [local migrations](https://supabase.com/docs/guides/local-development/overview), [changelog](https://supabase.com/changelog). Schema avoids optional extensions and user-editable JWT role claims.
+
+## SSR authentication foundation (development only)
+
+Copy `.env.example` to `.env.local` and set the project's public URL and publishable key. Do not commit `.env.local` or put secret/service-role keys in public variables. `/auth-check` exercises sign-in and sign-out using Supabase Auth; it is not the production login or a role check. Next.js proxy refreshes session cookies. The preview dashboard still accepts demo credentials and must never be treated as protected or deployed as a production workspace.
+
+Before production: disable hosted public signup, provision trusted users, implement server-verified roles and account status, replace preview entry, add rate limits, MFA and reset flows, and test real authenticated sessions and tenant isolation. No migrations are applied by the SSR client setup.

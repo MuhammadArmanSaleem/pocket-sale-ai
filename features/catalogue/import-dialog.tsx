@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -11,15 +11,20 @@ import {
   DialogTitle,
   DialogDescription,
 } from "@/components/ui/dialog";
-import {
-  IMPORT_HEADERS,
-  MAX_IMPORT_BYTES,
-  MAX_IMPORT_ROWS,
-} from "@/lib/constants";
+import { IMPORT_HEADERS, MAX_IMPORT_BYTES } from "@/lib/constants";
 import type { Product, ImportDialogProps } from "@/lib/types";
 import { parseImportRows } from "@/lib/import";
+import { readSpreadsheet } from "@/lib/spreadsheet";
 export function ImportDialog({ open, setOpen, onImport }: ImportDialogProps) {
   const t = useTranslations();
+  const generation = useRef(0);
+  function resetAndClose() {
+    generation.current++;
+    setRows([]);
+    setError(false);
+    setLoading(false);
+    setOpen(false);
+  }
   const [rows, setRows] = useState<Product[]>([]);
   const [error, setError] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -27,11 +32,8 @@ export function ImportDialog({ open, setOpen, onImport }: ImportDialogProps) {
     <Dialog
       open={open}
       onOpenChange={(v) => {
-        setOpen(v);
-        if (!v) {
-          setRows([]);
-          setError(false);
-        }
+        if (!v) resetAndClose();
+        else setOpen(true);
       }}
     >
       <DialogContent
@@ -80,23 +82,16 @@ export function ImportDialog({ open, setOpen, onImport }: ImportDialogProps) {
                 setError(true);
                 return;
               }
+              const request = ++generation.current;
               setLoading(true);
               try {
-                const XLSX = await import("xlsx");
-                const workbook = XLSX.read(await file.arrayBuffer(), {
-                  type: "array",
-                  sheetRows: MAX_IMPORT_ROWS + 2,
-                });
-                const sheet = workbook.Sheets[workbook.SheetNames[0]];
-                const values = XLSX.utils.sheet_to_json<unknown[]>(sheet, {
-                  header: 1,
-                  defval: "",
-                });
-                setRows(parseImportRows(values));
+                const values = await readSpreadsheet(file);
+                if (generation.current === request)
+                  setRows(parseImportRows(values));
               } catch {
-                setError(true);
+                if (generation.current === request) setError(true);
               } finally {
-                setLoading(false);
+                if (generation.current === request) setLoading(false);
               }
             }}
           />
@@ -136,15 +131,14 @@ export function ImportDialog({ open, setOpen, onImport }: ImportDialogProps) {
           </div>
         )}
         <div className="form-actions">
-          <Button variant="outline" onClick={() => setOpen(false)}>
+          <Button variant="outline" onClick={resetAndClose}>
             {t("cancel")}
           </Button>
           <Button
             disabled={!rows.length || loading}
             onClick={() => {
               onImport(rows);
-              setRows([]);
-              setOpen(false);
+              resetAndClose();
             }}
           >
             {t("importConfirm")}

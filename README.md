@@ -27,9 +27,9 @@ npm run build
 Open localhost:3000. Use the preview form to enter owner setup; the role selector exposes the admin preview separately. Neither is authorization.
 
 ## Project guide
-[PRD](PRD.md) · [Architecture](ARCHITECTURE.md) · [Essentials](ARCHITECTURE-ESSENTIALS.md) · [Design](DESIGN.md) · [Decisions](DECISIONS.md) · [Research](RESEARCH.md) · [Agent rules](AGENTS.md) · [Claude entry](CLAUDE.md)
+[PRD](PRD.md) · [Architecture](ARCHITECTURE.md) · [Essentials](ARCHITECTURE-ESSENTIALS.md) · [Design](DESIGN.md) · [Decisions](DECISIONS.md) · [Frontend review](FRONTEND-REVIEW.md) · [Research](RESEARCH.md) · [Agent rules](AGENTS.md) · [Claude entry](CLAUDE.md)
 
 ## Dependencies and attribution
-shadcn primitives were retrieved from the official shadcn-ui/ui new-york-v4 registry after the CLI registry endpoint failed in the build environment. Source imports were adapted locally; see SHADCN-LICENSE.md. Components use Radix direction context. Spreadsheet parsing is lazy-loaded and client-only; production import security/limits and parser maintenance must be reviewed before accepting untrusted production files.
+shadcn primitives were retrieved from the official shadcn-ui/ui new-york-v4 registry after the CLI registry endpoint failed in the build environment. Source imports were adapted locally; see SHADCN-LICENSE.md. Components use Radix direction context. Spreadsheet parsing uses lazy-loaded Papa Parse and ExcelJS (with a patched uuid override), is client-only, and rejects formula cells; production import security/limits and parser maintenance must be reviewed before accepting untrusted production files.
 
 Deployment target remains Vercel. No deployment or merge is performed by this UI change.

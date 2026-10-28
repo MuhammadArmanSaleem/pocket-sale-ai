@@ -82,3 +82,13 @@ Preserve numbered entries; supersede explicitly rather than rewriting history. R
 - Consequences: No dependency on the CLI registry at runtime. Revisit source components with future shadcn updates. Real device/RTL checks still required.
 - Evidence: Production compilation and type checks succeeded during implementation; final outcomes recorded in PR.
 - Revisit when: Framework caching or component generation requirements change.
+
+## ADR-008 — Replace vulnerable spreadsheet parser and repair preview state
+- Status: Implemented; browser acceptance pending.
+- Context: Review found xlsx advisories, policy success without retained state, stale import previews, incomplete RTL styles and unfiltered shop support navigation.
+- Decision: Use lazy Papa Parse/ExcelJS readers, override ExcelJS uuid to patched 11.x, reject complex/formula cells, retain policies in workspace state, filter support by selected shop, and reset/invalidate import reads on dismissal. Make primitive directional styles explicit and raise shared button targets to 44px minimum.
+- Rationale: Fix concrete review failures while keeping the UI-only scope and central definitions.
+- Alternatives: Keep vulnerable xlsx; label non-persisted policy edits as saved; assume direction context rewrites CSS.
+- Consequences: Spreadsheet dependencies are larger but lazy-loaded. Production import policy/security remains separate. Next config uses native ESM (.mjs) to avoid TS-config runtime transpilation failure observed in preview.
+- Evidence: 10 tests, strict type checking, lint and production build pass; audit reports zero vulnerabilities. FRONTEND-REVIEW.md distinguishes source checks from unverified browser/device checks.
+- Revisit when: Real import processing or backend services are integrated; dependency advisories or bundle measurements change.

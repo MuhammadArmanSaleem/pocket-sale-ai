@@ -241,3 +241,9 @@ export const navigationIcons = {
   owners: Users,
   settings: Settings,
 };
+
+export const previewPolicies = {
+  deliveryTime: "3–5",
+  deliveryCharges: 250,
+  returns: "Exchange within 7 days for unused items with tags.",
+};

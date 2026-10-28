@@ -71,6 +71,8 @@ export interface NavigationItem {
     | "settings";
 }
 export interface CatalogueProps {
+  policies: ShopPolicies;
+  setPolicies: (policies: ShopPolicies) => void;
   products: Product[];
   onChange: (p: Product[]) => void;
   notify: (s: string) => void;
@@ -86,6 +88,8 @@ export interface ImportDialogProps {
   onImport: (v: Product[]) => void;
 }
 export interface SupportProps {
+  shopFilter: string | null;
+  clearShopFilter: () => void;
   role: Role;
   shops: Shop[];
   tickets: Ticket[];
@@ -127,4 +131,10 @@ export type FieldProps = import("react").ComponentProps<
 > & { label: string };
 export interface RootLayoutProps {
   children: import("react").ReactNode;
+}
+
+export interface ShopPolicies {
+  deliveryTime: string;
+  deliveryCharges: number;
+  returns: string;
 }

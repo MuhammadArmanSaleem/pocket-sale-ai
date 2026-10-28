@@ -7,6 +7,11 @@
     "moduleResolution": "node",
     "incremental": false
   },
-  "include": ["lib/import.ts", "lib/constants.ts", "lib/types.ts"],
+  "include": [
+    "lib/import.ts",
+    "lib/spreadsheet.ts",
+    "lib/constants.ts",
+    "lib/types.ts"
+  ],
   "exclude": ["node_modules"]
 }

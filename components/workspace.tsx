@@ -42,6 +42,7 @@ import {
   ownerNavigation,
   adminNavigation,
   previewProducts,
+  previewPolicies,
   previewSessions,
   previewShops,
   previewTickets,
@@ -74,6 +75,10 @@ export function Workspace() {
   const [shopName, setShopName] = useState("Studio Clothing");
   const [connected, setConnected] = useState(false);
   const [failed, setFailed] = useState(false);
+  const [policies, setPolicies] = useState(previewPolicies);
+  const [supportShopFilter, setSupportShopFilter] = useState<string | null>(
+    null,
+  );
   const [products, setProducts] = useState(previewProducts);
   const [sessions, setSessions] = useState(previewSessions);
   const [shops, setShops] = useState(previewShops);
@@ -85,11 +90,13 @@ export function Workspace() {
   const navigation = role === "admin" ? adminNavigation : ownerNavigation;
   function go(p: Page) {
     setPage(p);
+    if (p === "support") setSupportShopFilter(null);
     setMobile(false);
     setNotice("");
   }
   function switchRole(v: string) {
     if (v !== "admin" && v !== "owner") return;
+    setSupportShopFilter(null);
     setRole(v);
     setPage("overview");
     setStage("login");
@@ -528,6 +535,8 @@ export function Workspace() {
                 </>
               ) : page === "catalogue" ? (
                 <Catalogue
+                  policies={policies}
+                  setPolicies={setPolicies}
                   products={products}
                   onChange={setProducts}
                   notify={setNotice}
@@ -540,6 +549,8 @@ export function Workspace() {
                 />
               ) : page === "support" ? (
                 <Support
+                  shopFilter={supportShopFilter}
+                  clearShopFilter={() => setSupportShopFilter(null)}
                   role={role}
                   shops={shops}
                   tickets={tickets}
@@ -590,7 +601,10 @@ export function Workspace() {
                           </div>
                           <Button
                             variant="outline"
-                            onClick={() => go("support")}
+                            onClick={() => {
+                              go("support");
+                              setSupportShopFilter(s.id);
+                            }}
                           >
                             {t("viewQueries")} ·{" "}
                             {tickets.filter((t) => t.shopId === s.id).length}

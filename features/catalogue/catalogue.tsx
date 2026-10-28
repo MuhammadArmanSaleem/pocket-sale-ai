@@ -26,7 +26,13 @@ import type {
   ProductEditorProps,
 } from "@/lib/types";
 import { ImportDialog } from "./import-dialog";
-export function Catalogue({ products, onChange, notify }: CatalogueProps) {
+export function Catalogue({
+  policies,
+  setPolicies,
+  products,
+  onChange,
+  notify,
+}: CatalogueProps) {
   const t = useTranslations();
   const [query, setQuery] = useState("");
   const [filter, setFilter] = useState<string>("all");
@@ -172,22 +178,35 @@ export function Catalogue({ products, onChange, notify }: CatalogueProps) {
             className="surface grid max-w-2xl gap-5 p-6"
             onSubmit={(e) => {
               e.preventDefault();
+              const values = new FormData(e.currentTarget);
+              setPolicies({
+                deliveryTime: String(values.get("deliveryTime") ?? "").trim(),
+                deliveryCharges: Number(values.get("deliveryCharges")),
+                returns: String(values.get("returns") ?? "").trim(),
+              });
               notify(t("saved"));
             }}
           >
-            <Field label={t("deliveryTime")} defaultValue="3–5" required />
+            <Field
+              label={t("deliveryTime")}
+              name="deliveryTime"
+              defaultValue={policies.deliveryTime}
+              required
+            />
             <Field
               label={t("deliveryCharges")}
               type="number"
               min={0}
-              defaultValue={250}
+              name="deliveryCharges"
+              defaultValue={policies.deliveryCharges}
               required
             />
             <Label className="field">
               {t("returns")}
               <Textarea
                 required
-                defaultValue="Exchange within 7 days for unused items with tags."
+                name="returns"
+                defaultValue={policies.returns}
               />
             </Label>
             <Button className="justify-self-start">{t("save")}</Button>

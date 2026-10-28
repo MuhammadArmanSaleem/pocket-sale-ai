@@ -18,6 +18,8 @@ import { ticketStatuses } from "@/lib/data";
 import { SHOP_ID } from "@/lib/constants";
 import type { SupportProps } from "@/lib/types";
 export function Support({
+  shopFilter,
+  clearShopFilter,
   role,
   shops,
   tickets,
@@ -29,7 +31,11 @@ export function Support({
   const [open, setOpen] = useState(false);
   const [filter, setFilter] = useState("all");
   const [reply, setReply] = useState("");
-  const own = tickets.filter((ti) => role === "admin" || ti.shopId === SHOP_ID);
+  const own = tickets.filter(
+    (ti) =>
+      (role === "admin" || ti.shopId === SHOP_ID) &&
+      (!shopFilter || ti.shopId === shopFilter),
+  );
   const filtered = own.filter((ti) => filter === "all" || ti.status === filter);
   const ticket = own.find((ti) => ti.id === selected);
   return (
@@ -46,6 +52,20 @@ export function Support({
           ) : undefined
         }
       />
+      {shopFilter && (
+        <div className="mb-4 flex items-center gap-3">
+          <span>{shops.find((s) => s.id === shopFilter)?.name}</span>
+          <Button
+            variant="outline"
+            onClick={() => {
+              clearShopFilter();
+              setSelected(null);
+            }}
+          >
+            {t("viewAll")}
+          </Button>
+        </div>
+      )}
       <div className="mb-4 flex flex-wrap gap-2">
         <Button
           variant={filter === "all" ? "secondary" : "ghost"}

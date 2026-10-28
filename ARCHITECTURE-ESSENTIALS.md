@@ -12,3 +12,7 @@
 - Commands: npm run typecheck, npm run lint, npm test, npm run build.
 - Browser/device/portal RTL acceptance is pending due to managed preview failure. Build success does not replace interaction testing.
 - Read the installed Next.js docs before code changes per AGENTS.md.
+
+
+## Database foundation (2026-10-28)
+Supabase SQL architecture now exists in `supabase/migrations/`; see [database guide](supabase/README.md) for exact run order, table relationships, security, provisioning and verification. This supersedes planned-only database statements above: the schema is implemented and locally SQL-tested, but has not been applied to Supabase or wired to UI. Auth endpoints, WhatsApp, AI, sessions and operational order rules remain deferred. Dashboard records still use mock state.

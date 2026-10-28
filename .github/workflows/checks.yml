@@ -1,4 +1,4 @@
-name: UI checks
+name: Application checks
 on:
   pull_request:
   push:
@@ -18,4 +18,5 @@ jobs:
       - run: npm run typecheck
       - run: npm run lint
       - run: npm test
+      - run: npm run test:db
       - run: npm run build

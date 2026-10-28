@@ -33,3 +33,7 @@ Open localhost:3000. Use the preview form to enter owner setup; the role selecto
 shadcn primitives were retrieved from the official shadcn-ui/ui new-york-v4 registry after the CLI registry endpoint failed in the build environment. Source imports were adapted locally; see SHADCN-LICENSE.md. Components use Radix direction context. Spreadsheet parsing uses lazy-loaded Papa Parse and ExcelJS (with a patched uuid override), is client-only, and rejects formula cells; production import security/limits and parser maintenance must be reviewed before accepting untrusted production files.
 
 Deployment target remains Vercel. No deployment or merge is performed by this UI change.
+
+
+## Database foundation (2026-10-28)
+Supabase SQL architecture now exists in `supabase/migrations/`; see [database guide](supabase/README.md) for exact run order, table relationships, security, provisioning and verification. This supersedes planned-only database statements above: the schema is implemented and locally SQL-tested, but has not been applied to Supabase or wired to UI. Auth endpoints, WhatsApp, AI, sessions and operational order rules remain deferred. Dashboard records still use mock state.

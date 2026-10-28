@@ -59,3 +59,7 @@ No browser acceptance was completed: managed preview rejected Next's CLI flags; 
 Shop policy values now live in workspace state and are passed to Catalogue; edits survive navigation in the same visit. Admin owner cards pass a shop filter into Support and offer a clear-filter control. Import dismissal clears preview/error/loading state and invalidates asynchronous reads using a generation ref.
 Papa Parse handles CSV, ExcelJS handles XLSX; readers are dynamically loaded. xlsx is removed. Formula/object cells are rejected before product validation. A patched uuid 11.x override resolves the transitive ExcelJS advisory for this lockfile. Config is native next.config.mjs after a TS-config transpiler panic in the managed production preview.
 See FRONTEND-REVIEW.md for the explicit review rubric and remaining browser acceptance work.
+
+
+## Database foundation (2026-10-28)
+Supabase SQL architecture now exists in `supabase/migrations/`; see [database guide](supabase/README.md) for exact run order, table relationships, security, provisioning and verification. This supersedes planned-only database statements above: the schema is implemented and locally SQL-tested, but has not been applied to Supabase or wired to UI. Auth endpoints, WhatsApp, AI, sessions and operational order rules remain deferred. Dashboard records still use mock state.

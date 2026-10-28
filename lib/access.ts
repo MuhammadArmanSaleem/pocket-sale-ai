@@ -13,3 +13,10 @@ export function parseAccess(rows: unknown): AccountAccess {
   }
   return { role: "unprovisioned" };
 }
+
+export function accessDestination(access: AccountAccess | null): "/auth-check" | "/live" | "/admin" | null {
+  if (!access) return "/auth-check";
+  if (access.role === "admin") return "/admin";
+  if (access.role === "owner") return "/live";
+  return null;
+}

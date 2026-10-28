@@ -1,5 +1,11 @@
 import type en from "./en";
 const ur: Record<keyof typeof en, string> = {
+  accountUnavailableTitle: "اکاؤنٹ کی رسائی دستیاب نہیں",
+  accountSuspended: "یہ دکان معطل ہے۔ منتظم سے رابطہ کریں۔",
+  accountNotProvisioned: "یہ اکاؤنٹ ابھی تیار نہیں ہوا۔ منتظم سے رابطہ کریں۔",
+  accountCheckFailed: "اکاؤنٹ کی تصدیق نہیں ہو سکی۔ دوبارہ کوشش کریں۔",
+  retryAccount: "دوبارہ کوشش کریں",
+  loginRealPartial: "اپنے مقررہ اکاؤنٹ سے سائن اِن کریں۔ اصل ورک اسپیس ابھی تیار ہو رہی ہے۔",
   adminAccessRequired: "منتظم کی اجازت درکار ہے۔",
   adminSupportPartial: "سپورٹ ان باکس: مالک کے اکاؤنٹس اور دیگر منتظم ٹولز ابھی منسلک نہیں ہیں۔",
   policyMissing: "دکان کی پالیسیاں موجود نہیں ہیں۔ منتظم سے رابطہ کریں۔",

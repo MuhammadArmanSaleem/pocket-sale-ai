@@ -14,3 +14,11 @@ test('access parsing separates admin, active owner and suspended owner', () => {
   assert.deepEqual(parseAccess([{account_role: 'owner', shop_id: 'id', shop_active: true}]), {role: 'owner', shopId: 'id'});
   assert.deepEqual(parseAccess([{account_role: 'owner', shop_id: 'id', shop_active: false}]), {role: 'suspended'});
 });
+test('entry routes only verified active account roles to their own screen', () => {
+  const { accessDestination } = require('../.test-build/lib/access.js');
+  assert.equal(accessDestination(null), '/auth-check');
+  assert.equal(accessDestination({role:'owner',shopId:'id'}), '/live');
+  assert.equal(accessDestination({role:'admin'}), '/admin');
+  assert.equal(accessDestination({role:'suspended'}), null);
+  assert.equal(accessDestination({role:'unprovisioned'}), null);
+});

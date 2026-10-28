@@ -1,4 +1,10 @@
 const en = {
+  accountUnavailableTitle: "Account access unavailable",
+  accountSuspended: "This shop is suspended. Contact an administrator.",
+  accountNotProvisioned: "This account has not been provisioned. Contact an administrator.",
+  accountCheckFailed: "We could not verify your account. Please try again.",
+  retryAccount: "Try again",
+  loginRealPartial: "Sign in with your assigned account. The real workspace is still being built.",
   adminAccessRequired: "Administrator access is required.",
   adminSupportPartial: "Support inbox: owner provisioning and other admin tools are not connected yet.",
   policyMissing: "Shop policies are not configured. Contact an administrator.",

@@ -1,5 +1,7 @@
 "use client";
 import { useState, useTransition } from "react";
+import { useFormik } from "formik";
+import { loginSchema } from "@/lib/validation";
 import { useLocale, useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
 import {
@@ -104,6 +106,11 @@ export function Workspace() {
     setStage("login");
     setNotice("");
   }
+  const login = useFormik({
+    initialValues: { email: "owner@example.com", password: "preview-only" },
+    validationSchema: loginSchema,
+    onSubmit: () => setStage(role === "admin" ? "workspace" : "setup"),
+  });
   const nav = <Nav items={navigation} current={page} go={go} />;
   const controls = (
     <div className="flex flex-wrap items-center gap-2">
@@ -194,25 +201,33 @@ export function Workspace() {
               {stage === "login" ? (
                 <form
                   className="grid gap-5"
-                  onSubmit={(e) => {
-                    e.preventDefault();
-                    setStage(role === "admin" ? "workspace" : "setup");
-                  }}
+                  noValidate
+                  onSubmit={login.handleSubmit}
                 >
                   <Field
                     label={t("email")}
                     type="email"
                     required
-                    autoComplete="off"
-                    defaultValue="owner@example.com"
+                    name="email"
+                    autoComplete="username"
+                    value={login.values.email}
+                    onChange={login.handleChange}
+                    onBlur={login.handleBlur}
+                    aria-invalid={Boolean(login.touched.email && login.errors.email)}
                   />
+                  {login.touched.email && login.errors.email && <p role="alert">{t("invalidEmail")}</p>}
                   <Field
                     label={t("password")}
                     type="password"
                     required
-                    autoComplete="off"
-                    defaultValue="preview-only"
+                    name="password"
+                    autoComplete="current-password"
+                    value={login.values.password}
+                    onChange={login.handleChange}
+                    onBlur={login.handleBlur}
+                    aria-invalid={Boolean(login.touched.password && login.errors.password)}
                   />
+                  {login.touched.password && login.errors.password && <p role="alert">{t("requiredPassword")}</p>}
                   <Button className="min-h-12">
                     {t("login")}
                     <ArrowRight className="rtl:rotate-180" />

@@ -1,5 +1,7 @@
 import type en from "./en";
 const ur: Record<keyof typeof en, string> = {
+  invalidEmail: "درست ای میل ایڈریس درج کریں۔",
+  requiredPassword: "اپنا پاس ورڈ درج کریں۔",
   showPassword: "پاس ورڈ دکھائیں",
   hidePassword: "پاس ورڈ چھپائیں",
   duplicateVariant:

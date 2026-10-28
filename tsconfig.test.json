@@ -8,6 +8,7 @@
     "incremental": false
   },
   "include": [
+    "lib/validation.ts",
     "lib/import.ts",
     "lib/variants.ts",
     "lib/spreadsheet.ts",

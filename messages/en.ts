@@ -1,4 +1,6 @@
 const en = {
+  invalidEmail: "Enter a valid email address.",
+  requiredPassword: "Enter your password.",
   showPassword: "Show password",
   hidePassword: "Hide password",
   duplicateVariant:

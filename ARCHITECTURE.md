@@ -40,3 +40,9 @@ Future real import processing must validate files on the server; client preview 
 ## Verification
 Documentation: check links, requirements and implemented/proposed labels.
 Implementation: type checks, relevant automated checks, production build, keyboard flows, mobile/desktop layouts and both language directions. Record what actually ran; document missing access or environment limitations.
+
+## Planned locale boundary
+Adopt next-intl with a validated server-resolved locale and a locale cookie preference (no locale-prefixed routes required initially). The same locale supplies html lang/dir, request translations and NextIntlClientProvider. shadcn DirectionProvider receives the matching direction so primitive and portal behavior agrees with document layout.
+Use useTranslations/useLocale in appropriate components and getTranslations in async server components. Keep locale constants/mapping, types, option arrays and translation dictionaries in the separate central files identified in AGENTS.md and DESIGN.md. Any request configuration modules should consume those definitions, not copy them.
+Validate locale against en/ur and fall back to the central default. Persist switches via a validated server mechanism and refresh translation context while retaining route/query and owner draft state. Exact adapter/version compatibility must be checked against installed Next.js and next-intl docs during implementation.
+This is a dependency/architecture selection, not an installed integration. No package or runtime files change in this documentation PR.

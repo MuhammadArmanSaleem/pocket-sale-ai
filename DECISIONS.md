@@ -51,3 +51,13 @@ Preserve numbered entries; supersede explicitly rather than rewriting history. R
 - Consequences:
 - Evidence:
 - Revisit when:
+
+## ADR-005 — Central next-intl locale and shadcn direction
+- Status: Selected implementation approach; not installed or implemented.
+- Context: English/Urdu need shared translations and consistent RTL rather than scattered client state.
+- Decision: next-intl hooks/server helpers with NextIntlClientProvider; one validated server locale sets document lang/dir and shadcn DirectionProvider. Persist preference using a locale cookie without requiring localized route prefixes.
+- Rationale: Reuse a Next.js translation layer while treating direction as a layout and primitive concern, not a translation side effect.
+- Alternatives: Handwritten translation hook with duplicated locale state; client-only dir toggles; immediate locale-prefixed route migration.
+- Consequences: Central locale definitions and typed message keys; logical CSS, bidi isolation and portal verification remain necessary. Switching must preserve route and unsaved work. Dependency compatibility still requires implementation checks.
+- Evidence: Official next-intl server/client configuration guidance and shadcn RTL/Next.js guidance reviewed on 2026-10-28; see DESIGN.md references. Runtime behavior is unverified.
+- Revisit when: Public localized URLs or another preference persistence requirement is introduced.

@@ -40,3 +40,12 @@ Validate touch targets, long translated labels, keyboard navigation and zoom. Do
 - Super admin: owner directory and support list/detail/reply/status.
 
 Prior standalone HTML previews guide discussion only. Do not copy their custom primitives or role-switch logic into production authentication.
+
+## Planned i18n implementation
+Use next-intl for translations and a single validated locale shared by server/client rendering. useTranslations supplies component messages; useLocale reads the active locale; async server components use getTranslations. NextIntlClientProvider supplies client translation context.
+Set html lang and dir from the server-resolved locale, then pass the same direction to shadcn's DirectionProvider, including portaled components. Configure generated shadcn components for RTL according to the chosen primitive family. A translation hook does not mirror layout by itself.
+Keep English/Urdu dictionaries in messages/en.ts and messages/ur.ts; supported locale constants and direction mapping in lib/constants.ts; types in lib/types.ts; display language options in lib/data.ts. Use message keys for labels in mapped arrays rather than hardcoded translated strings. Keep message keys type-safe; no any or assertion escape hatches.
+Use a locale cookie as the planned preference source for this dashboard; a validated request locale must be available before first render. Switching language should update the cookie and server context while preserving the current page, query, shop context and unsaved edits (prompt or preserve rather than discard). Do not implement a client-only direction flip after hydration.
+Verify translated validation/error/empty states, Urdu shaping, prices, mixed-direction identifiers, directional icons, mobile navigation, dialogs/menus/tooltips, first render and reload. Include missing/invalid cookie fallback using the centralized default locale.
+References: [next-intl server/client usage](https://next-intl.dev/docs/environments/server-client-components), [configuration](https://next-intl.dev/docs/usage/configuration), [shadcn RTL for Next.js](https://ui.shadcn.com/docs/rtl/next).
+Status: documented approach only; dependencies, provider, cookie flow and UI are not implemented or tested.

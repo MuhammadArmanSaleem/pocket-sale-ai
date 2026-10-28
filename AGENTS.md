@@ -35,3 +35,11 @@ This version has breaking changes — APIs, conventions, and file structure may 
 This block is written and re-added by `next dev` — verify at `node_modules/next/dist/server/lib/generate-agent-files.js`. Removing it from a diff only re-creates the uncommitted change; committing it with your work keeps the tree clean.
 
 <!-- END:nextjs-agent-rules -->
+
+## Mandatory i18n and direction
+- Use next-intl as the planned translation layer: useTranslations/useLocale for appropriate components, getTranslations for async server components, and NextIntlClientProvider for client context. Do not create duplicate language state per component.
+- Centralize supported en/ur locales and locale-to-direction mapping in lib/constants.ts, locale/direction types in lib/types.ts, language option arrays in lib/data.ts and translations in messages/en.ts and messages/ur.ts.
+- Resolve one validated locale on the server and use it for document lang/dir, translations and the shadcn DirectionProvider. English is ltr; Urdu is rtl. Follow the installed primitive family's current shadcn RTL guide.
+- Persist language selection in a locale cookie for the dashboard approach; switching language must refresh server context without dropping route, query, shop context or unsaved drafts. No locale-prefixed routes are required by this decision.
+- Use logical start/end layout utilities, intentional directional icon mirroring and bidi isolation for IDs/phones. Hooks alone do not implement RTL.
+- Verify first render, refresh and switching both ways, portal direction (dialogs/menus/tooltips), keyboard/mobile behavior and absence of hydration mismatches. These are future implementation checks, not completed by docs.

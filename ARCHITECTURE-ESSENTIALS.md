@@ -1,15 +1,14 @@
 # Architecture essentials
 
-- Current code: Next.js App Router starter in app/; public/ contains starter assets.
-- package.json currently pins Next 16.4.3, React/React DOM 19.3.0; TypeScript and Tailwind are present. shadcn/ui is not yet installed.
-- Target hosting: Vercel. Planned login/database/storage: Supabase; no configuration yet.
-- UI/UX first. Do not add an agent or live WhatsApp connection under the dashboard phase.
-- Proposed central modules: lib/constants.ts, lib/types.ts, lib/data.ts. Separate files, imported by components. No TypeScript any.
-- Shared shadcn primitives in components/ui; shared feature/layout components composed above them.
-- Semantic CSS tokens in app/globals.css; token roles and usage documented in DESIGN.md.
-- English/Urdu messages separated from components. Set lang and dir at the document boundary.
-- One shop per owner; no staff or public owner signup. Super admin provisions owner access.
-- Connection gate applies to owner workspace; disconnected owners return to connection setup. Do not accidentally block super admin support access.
-- Client role switches are preview controls, never security. Real authorization and tenant separation are future server/database requirements.
-- Keep secrets server-side. Future AI receives authorized shop information, never unrestricted database access.
-- Read installed Next.js docs before code changes per AGENTS.md.
+- Next.js App Router, React, strict TypeScript, Tailwind/PostCSS, shadcn/ui with Radix, next-intl.
+- UI-only preview: client state in components/workspace.tsx; no authentication, database, live WhatsApp or AI.
+- One shop per owner. Owner preview setup → simulated connection → workspace; disconnect routes back. Admin preview independent.
+- Shared constants: lib/constants.ts; all application types: lib/types.ts; static arrays/fixtures: lib/data.ts. No TypeScript any; lint enforces explicit-any prohibition and strict TS rejects implicit any.
+- shadcn primitives in components/ui; feature composition in features/catalogue, features/support and components/sessions.tsx.
+- Design tokens: app/globals.css. Translation dictionaries: messages/en.ts and messages/ur.ts with typed keys.
+- Server-resolved locale cookie sets html lang/dir, next-intl provider and Radix DirectionProvider. Switching refreshes server context and retains mounted client state; reload resets mock records.
+- Import parsing is browser-only and lazy-loaded, validated by lib/import.ts; production validation and reconciliation are future work.
+- Vercel remains target hosting, Supabase remains planned. Nothing deployed.
+- Commands: npm run typecheck, npm run lint, npm test, npm run build.
+- Browser/device/portal RTL acceptance is pending due to managed preview failure. Build success does not replace interaction testing.
+- Read the installed Next.js docs before code changes per AGENTS.md.

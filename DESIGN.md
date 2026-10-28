@@ -49,3 +49,9 @@ Use a locale cookie as the planned preference source for this dashboard; a valid
 Verify translated validation/error/empty states, Urdu shaping, prices, mixed-direction identifiers, directional icons, mobile navigation, dialogs/menus/tooltips, first render and reload. Include missing/invalid cookie fallback using the centralized default locale.
 References: [next-intl server/client usage](https://next-intl.dev/docs/environments/server-client-components), [configuration](https://next-intl.dev/docs/usage/configuration), [shadcn RTL for Next.js](https://ui.shadcn.com/docs/rtl/next).
 Status: documented approach only; dependencies, provider, cookie flow and UI are not implemented or tested.
+
+
+## First UI implementation
+Tokens and Radix-backed shadcn primitives are implemented in app/globals.css and components/ui. Product and support dialogs use explicit localized Cancel/Close controls, titles and descriptions. The UI uses responsive grid/card views and mobile list/detail back navigation. Animations respect reduced-motion; translucent header has a reduced-transparency fallback.
+next-intl and direction providers are implemented; earlier planned-only statements describe the pre-implementation foundation. The green/light palette remains reviewable. Urdu uses locally available Arabic/Urdu-capable font fallbacks; no bundled Urdu font or target-device typography acceptance yet.
+Visual, mobile, portal and keyboard acceptance remain pending because the managed preview service did not stay reachable. Do not interpret CSS implementation as completed device validation.

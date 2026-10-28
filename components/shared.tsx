@@ -1,4 +1,7 @@
 "use client";
+import { useState, useId } from "react";
+import { Eye, EyeOff } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import { useTranslations } from "next-intl";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -15,12 +18,40 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-export function Field({ label, ...props }: FieldProps) {
+export function Field({ label, id, type, ...props }: FieldProps) {
+  const t = useTranslations();
+  const generatedId = useId();
+  const inputId = id ?? generatedId;
+  const [revealed, setRevealed] = useState(false);
+  const password = type === "password";
   return (
-    <Label className="field">
-      <span>{label}</span>
-      <Input {...props} />
-    </Label>
+    <div className="grid gap-2">
+      <Label htmlFor={inputId}>{label}</Label>
+      <div className="relative">
+        <Input
+          {...props}
+          id={inputId}
+          type={password && revealed ? "text" : type}
+          className={
+            password ? "pe-12 " + (props.className ?? "") : props.className
+          }
+        />
+        {password && (
+          <Button
+            type="button"
+            variant="ghost"
+            size="icon"
+            className="absolute end-0 top-0"
+            aria-label={t(revealed ? "hidePassword" : "showPassword")}
+            aria-controls={inputId}
+            aria-pressed={revealed}
+            onClick={() => setRevealed((value) => !value)}
+          >
+            {revealed ? <EyeOff /> : <Eye />}
+          </Button>
+        )}
+      </div>
+    </div>
   );
 }
 export function Heading({ title, subtitle, action }: HeadingProps) {

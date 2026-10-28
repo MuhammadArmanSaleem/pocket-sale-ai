@@ -9,6 +9,7 @@
   },
   "include": [
     "lib/import.ts",
+    "lib/variants.ts",
     "lib/spreadsheet.ts",
     "lib/constants.ts",
     "lib/types.ts"

@@ -1,4 +1,15 @@
 const en = {
+  showPassword: "Show password",
+  hidePassword: "Hide password",
+  duplicateVariant:
+    "Rows {first} and {second} both use {size} / {colour}. Keep one row and combine its stock, or choose another size/colour.",
+  visibleHelp:
+    "Active: this product is available to the assistant after saving.",
+  hiddenHelp:
+    "Hidden: keep this product saved, but exclude it from the assistant after saving.",
+  visibilitySaveHint:
+    "This choice applies when you save the product. Real AI is not connected.",
+
   unsavedTitle: "Keep your changes?",
   unsavedDescription:
     "You have unsaved product changes. Keep editing or discard them to close this form.",

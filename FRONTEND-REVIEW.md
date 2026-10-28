@@ -40,3 +40,9 @@ Keep PR draft until UI/browser acceptance is complete. No merge/deployment, acco
 
 ## Photo identity correction
 Product photos now use a typed {id, src} record. Each selected file receives a unique ID; rendering and deletion use that ID so identical image contents do not produce duplicate React keys. Catalogue thumbnails read the photo source explicitly. Typecheck/lint and all 10 existing import tests pass; production build result is recorded in the handoff. Duplicate-photo browser interaction is still unverified.
+
+## Reported form UX corrections
+- Duplicate variants report the exact first/second row and size/colour rather than only the generic validation message. Regression tests cover rows 1 and 3 (L/blue with different quantities), case/whitespace normalization and distinct combinations.
+- The shared password Field includes localized show/hide controls with an accessible name, pressed state and stable input association. The label/input composition uses explicit htmlFor/id, with the eye control outside the label.
+- Product visibility shows Active/Hidden and explains that the choice applies after saving. Failed validation never commits the new visibility; real AI remains disconnected.
+- Typecheck/lint, 12 tests and production build pass. Password and switch visual/browser checks remain pending. The separate spreadsheet dependency optimization is not included in this change.

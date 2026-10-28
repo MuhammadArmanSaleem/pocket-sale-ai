@@ -26,6 +26,7 @@ import type {
   CatalogueProps,
   ProductEditorProps,
 } from "@/lib/types";
+import { findDuplicateVariant } from "@/lib/variants";
 import { ImportDialog } from "./import-dialog";
 export function Catalogue({
   policies,
@@ -318,13 +319,17 @@ function ProductEditor({
   const [visible, setVisible] = useState(product?.visible ?? true);
   const [error, setError] = useState("");
   function update(id: string, patch: Partial<Variant>) {
+    setError("");
     onDirty();
     setVariants((vs) => vs.map((v) => (v.id === id ? { ...v, ...patch } : v)));
   }
   return (
     <form
       className="grid gap-5"
-      onChangeCapture={onDirty}
+      onChangeCapture={() => {
+        onDirty();
+        setError("");
+      }}
       onSubmit={(e) => {
         e.preventDefault();
         const f = new FormData(e.currentTarget);
@@ -337,6 +342,18 @@ function ProductEditor({
           colour: v.colour.trim(),
           price: same ? common : v.price,
         }));
+        const duplicate = findDuplicateVariant(actual);
+        if (duplicate) {
+          setError(
+            t("duplicateVariant", {
+              first: duplicate.first,
+              second: duplicate.second,
+              size: duplicate.size,
+              colour: duplicate.colour,
+            }),
+          );
+          return;
+        }
         if (
           !name ||
           actual.some(
@@ -347,9 +364,7 @@ function ProductEditor({
               v.price <= 0 ||
               !Number.isInteger(v.stock) ||
               v.stock < 0,
-          ) ||
-          new Set(actual.map((v) => (v.size + "|" + v.colour).toLowerCase()))
-            .size !== actual.length
+          )
         ) {
           setError(t("invalid"));
           return;
@@ -572,8 +587,11 @@ function ProductEditor({
             setVisible(value);
           }}
         />
-        {t("visibility")}
+        {t("visibility")}: {t(visible ? "active" : "hidden")}
       </Label>
+      <p className="muted" role="status">
+        {t(visible ? "visibleHelp" : "hiddenHelp")} {t("visibilitySaveHint")}
+      </p>
       {error && (
         <p role="alert" className="text-destructive">
           {error}

@@ -143,3 +143,10 @@ export interface ShopPolicies {
   deliveryCharges: number;
   returns: string;
 }
+
+export interface DuplicateVariant {
+  first: number;
+  second: number;
+  size: string;
+  colour: string;
+}

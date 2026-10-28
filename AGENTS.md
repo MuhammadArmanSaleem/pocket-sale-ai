@@ -18,7 +18,7 @@ Read this file, PRD.md, ARCHITECTURE-ESSENTIALS.md, DESIGN.md and relevant DECIS
 - No public self-signup: super admin provisions shop-owner accounts. Do not reintroduce abandoned Hermes/KSoR alternatives.
 
 ## Workflow and verification
-- Inspect branch/head and existing changes. Work on focused branches and reviewable PRs; preserve main and unrelated edits. Do not merge, force-push or deploy without applicable authorization.
+- Inspect branch/head and existing changes. Branch new focused work from `dev` and target future PRs to `dev` unless the user explicitly requests a different base. Preserve `main` and unrelated edits. Do not merge, force-push or deploy without applicable authorization.
 - Keep PRD, architecture, design and decisions aligned with material changes. Distinguish confirmed requirements, proposals, implementation and unresolved questions.
 - For docs-only changes check references and consistency. For implementation run appropriate type/build checks and exercise changed UI flows, including mobile and Urdu RTL. Report exact results and limitations.
 - Strict TypeScript and no-explicit-any lint enforcement are implemented. Keep both checks passing; do not weaken them to bypass errors.

@@ -23,7 +23,7 @@ try {
  grant usage on schema public to anon,authenticated,service_role;`);
  const folder = new URL('../supabase/migrations/', import.meta.url);
  for (const file of (await readdir(folder)).filter((f) => f.endsWith('.sql')).sort()) await db.exec(await readFile(new URL(file,folder),'utf8'));
- await db.exec(`insert into auth.users values('${id(1)}'),('${id(2)}'),('${id(3)}');
+ await db.exec(`insert into auth.users values('${id(1)}'),('${id(2)}'),('${id(3)}'),('${id(4)}');
  insert into public.profiles(user_id,display_name) values('${id(1)}','Owner A'),('${id(2)}','Owner B'),('${id(3)}','Admin');
  insert into private.admin_users(user_id) values('${id(3)}');
  insert into public.shops(id,owner_user_id,name) values('${id(11)}','${id(1)}','A'),('${id(12)}','${id(2)}','B');
@@ -32,7 +32,12 @@ try {
  await db.exec('set role anon;');
  await denied('select * from public.products');
  await denied('select * from public.profiles');
+ await denied('select * from public.current_access()');
+ await login(4);
+ await eq('select count(*)::int as value from public.current_access()', 0);
  await login(1);
+ await eq('select account_role as value from public.current_access()', 'owner');
+ await eq('select shop_active as value from public.current_access()', true);
  await eq('select count(*)::int as value from public.products',1);
  await eq('select count(*)::int as value from public.shops',1);
  await denied(`insert into public.products(shop_id,name) values('${id(12)}','Intrusion')`);
@@ -66,6 +71,7 @@ try {
  await eq('select count(*)::int as value from storage.objects',0);
  await eq('select count(*)::int as value from public.support_tickets',0);
  await login(3);
+ await eq('select account_role as value from public.current_access()', 'admin');
  await eq('select count(*)::int as value from public.shops',2);
  await eq('select count(*)::int as value from public.products',0);
  await eq('select count(*)::int as value from public.support_tickets',1);
@@ -76,6 +82,7 @@ try {
  await eq(`select status as value from public.support_tickets where id='${ticket}'`,'open');
  await db.exec(`reset role; update public.shops set is_active=false where id='${id(11)}';`);
  await login(1);
+ await eq('select shop_active as value from public.current_access()', false);
  await eq('select count(*)::int as value from public.products',0);
  await eq('select count(*)::int as value from storage.objects',0);
  await denied(`insert into public.products(shop_id,name) values('${id(11)}','Suspended')`);

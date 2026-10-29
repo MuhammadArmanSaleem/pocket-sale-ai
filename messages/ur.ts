@@ -1,5 +1,6 @@
 import type en from "./en";
 const ur: Record<keyof typeof en, string> = {
+  authFailed: "سائن اِن نہیں ہو سکا۔ اپنی معلومات چیک کریں یا منتظم سے رابطہ کریں۔",
   invalidEmail: "درست ای میل ایڈریس درج کریں۔",
   requiredPassword: "اپنا پاس ورڈ درج کریں۔",
   showPassword: "پاس ورڈ دکھائیں",

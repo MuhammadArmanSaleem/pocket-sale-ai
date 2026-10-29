@@ -15,6 +15,7 @@ export async function signIn(formData: FormData) {
   const { error } = await supabase.auth.signInWithPassword({ email: email.trim(), password });
   if (error) redirect("/auth-check?error=1");
   revalidatePath("/auth-check");
+  redirect("/auth-check");
 }
 
 export async function signOut() {

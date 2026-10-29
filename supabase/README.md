@@ -9,6 +9,7 @@ Run from repository root. Supabase CLI runs timestamped filenames in this order 
 1. `migrations/20261028191245_core_schema.sql` — tables, constraints, indexes, timestamps; application tables start with RLS enabled and client grants revoked.
 2. `migrations/20261028191252_tenant_security.sql` — narrow client grants, owner isolation, admin directory/support access and support reply state updates.
 3. `migrations/20261028191259_product_storage.sql` — private product-image bucket and object access policies.
+4. `migrations/20261028203600_current_access.sql` — authenticated access lookup using trusted admin membership and shop status.
 
 Do not run a later file first. These are one-time forward migrations, not repeatedly executable scripts. Create changes with `npx supabase migration new descriptive_name`; never edit applied migration history. The files were generated with CLI 2.122.0. No seed data or credentials are included.
 

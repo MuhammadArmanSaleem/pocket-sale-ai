@@ -76,3 +76,5 @@ export const variantEditSchema = yup.object({
 }).noUnknown();
 
 export const variantRemoveSchema = variantEditSchema.pick(["variantId", "productId", "version"]).noUnknown();
+
+export const variantAddSchema = variantEditSchema.omit(["variantId", "version"]).noUnknown();

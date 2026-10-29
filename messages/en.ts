@@ -6,6 +6,7 @@ const en = {
   passwordInvalid: "Check the password length and make sure both new passwords match.",
   passwordChangeFailed: "Password could not be changed. Check your current password or try again later.",
   passwordChanged: "Password changed.",
+  addVariantFailed: "Could not add this variant. Check for duplicates or the variant limit.",
   removeVariantTitle: "Remove variant?",
   removeVariantDescription: "This cannot be undone. A variant referenced by a draft order cannot be removed.",
   removeVariantFailed: "Could not remove this variant. It may have changed or be used by a draft order.",

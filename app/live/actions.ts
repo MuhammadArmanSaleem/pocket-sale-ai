@@ -71,3 +71,8 @@ export async function removeVariantAction(input: unknown): Promise<ProductCreate
   try { const { removeVariant } = await import("@/lib/supabase/catalogue"); await removeVariant(input); revalidatePath("/live"); return { ok: true }; }
   catch { return { ok: false }; }
 }
+
+export async function addVariantAction(input: unknown): Promise<ProductCreateResult> {
+  try { const { addVariant } = await import("@/lib/supabase/catalogue"); await addVariant(input); revalidatePath("/live"); return { ok: true }; }
+  catch { return { ok: false }; }
+}

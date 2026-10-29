@@ -1,7 +1,7 @@
 import "server-only";
 import { createClient } from "./server";
 import { getAccountAccess } from "./access";
-import { createProductSchema, productVisibilitySchema, productDetailsSchema, variantEditSchema, variantRemoveSchema } from "../validation";
+import { createProductSchema, productVisibilitySchema, productDetailsSchema, variantEditSchema, variantRemoveSchema, variantAddSchema } from "../validation";
 
 // This entry point is not yet connected to the preview catalogue.
 // Derive shop scope on the server; do not accept it from the caller.
@@ -77,4 +77,13 @@ export async function removeVariant(input: unknown): Promise<void> {
   const client = await createClient();
   const { error } = await client.rpc("remove_product_variant", { target_shop: access.shopId, target_product: value.productId, target_variant: value.variantId, expected_version: value.version });
   if (error) throw new Error("Variant cannot be removed");
+}
+
+export async function addVariant(input: unknown): Promise<void> {
+  const access = await getAccountAccess();
+  if (!access || access.role !== "owner") throw new Error("Access denied");
+  const value = await variantAddSchema.validate(input, { strict: true, abortEarly: false });
+  const client = await createClient();
+  const { error } = await client.rpc("add_product_variant", { target_shop: access.shopId, target_product: value.productId, variant_size: value.size.trim(), variant_colour: value.colour.trim(), variant_price: value.price, variant_stock: value.stock });
+  if (error) throw new Error("Variant cannot be added");
 }

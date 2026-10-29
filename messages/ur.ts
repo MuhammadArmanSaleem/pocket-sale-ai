@@ -7,6 +7,7 @@ const ur: Record<keyof typeof en, string> = {
   passwordInvalid: "پاس ورڈ کی لمبائی اور دونوں نئے پاس ورڈ کی مطابقت چیک کریں۔",
   passwordChangeFailed: "پاس ورڈ تبدیل نہیں ہوا۔ موجودہ پاس ورڈ چیک کریں یا بعد میں کوشش کریں۔",
   passwordChanged: "پاس ورڈ تبدیل ہو گیا۔",
+  addVariantFailed: "ویریئنٹ شامل نہیں ہوا۔ دہرایا ہوا ویریئنٹ یا حد چیک کریں۔",
   removeVariantTitle: "ویریئنٹ ہٹائیں؟",
   removeVariantDescription: "یہ عمل واپس نہیں ہوگا۔ ڈرافٹ آرڈر میں استعمال شدہ ویریئنٹ نہیں ہٹایا جا سکتا۔",
   removeVariantFailed: "ویریئنٹ نہیں ہٹا۔ ممکن ہے یہ بدل گیا ہو یا ڈرافٹ آرڈر میں استعمال ہو۔",

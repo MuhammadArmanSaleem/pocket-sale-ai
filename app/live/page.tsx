@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import { getAccountAccess } from "@/lib/supabase/access";
 import { listProducts } from "@/lib/supabase/catalogue";
+import { AddVariantForm } from "./add-variant-form";
 import { VariantEditor } from "./variant-editor";
 import { ProductDetailsEditor } from "./product-details-editor";
 import { VisibilityButton } from "./visibility-button";
@@ -32,6 +33,7 @@ export default async function LiveCatalogue() {
       <section><h2>{t("products")}</h2>
         {products.length === 0 ? <p>{t("noResults")}</p> : <ul>{products.map((p) => <li key={p.id} className="grid gap-2 border-b py-3"><strong>{p.name}</strong><p>{p.category} · {t(p.is_visible ? "active" : "hidden")}</p>
           <ul>{p.product_variants.map(variant => <li key={variant.id}>{variant.size} · {variant.colour} · <bdi>Rs {Number(variant.unit_price).toLocaleString("en-PK")}</bdi> · {t("stock")}: {variant.stock_quantity}<VariantEditor variantCount={p.product_variants.length} variantId={variant.id} productId={p.id} version={variant.updated_at} size={variant.size} colour={variant.colour} price={Number(variant.unit_price)} stock={variant.stock_quantity} /></li>)}</ul>
+          <AddVariantForm productId={p.id} variantCount={p.product_variants.length} />
           <VisibilityButton productId={p.id} visible={p.is_visible} />
           <ProductDetailsEditor productId={p.id} version={p.updated_at} name={p.name} category={p.category} description={p.description} />
         </li>)}</ul>}

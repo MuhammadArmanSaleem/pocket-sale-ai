@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { redirect } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import { cataloguePageHref, parseCataloguePage, parseCatalogueSearch } from "@/lib/pagination";
@@ -12,6 +13,7 @@ import { VariantEditor } from "./variant-editor";
 import { ProductDetailsEditor } from "./product-details-editor";
 import { VisibilityButton } from "./visibility-button";
 import { ProductForm } from "./product-form";
+import { PhotoUpload } from "./photo-upload";
 import { ImportProducts } from "./import-products";
 import { PolicyForm } from "./policy-form";
 import { loadShopPolicy } from "@/lib/supabase/policies";
@@ -40,6 +42,7 @@ export default async function LiveCatalogue({ searchParams }: { searchParams: Pr
       <ImportProducts />
       {policy ? <PolicyForm initial={policy} /> : <p>{t("policyMissing")}</p>}
       <section id="products"><h2>{t("products")}</h2>
+        {products.photoError && <p role="alert">{t("photoLoadFailed")}</p>}
         <form action="/live#products" method="get" className="flex flex-wrap gap-2 py-3">
           <label className="sr-only" htmlFor="catalogue-search">{t("searchProductNames")}</label>
           <Input id="catalogue-search" name="q" defaultValue={search} maxLength={MAX_CATALOGUE_SEARCH_LENGTH} placeholder={t("searchProductNames")} />
@@ -47,6 +50,8 @@ export default async function LiveCatalogue({ searchParams }: { searchParams: Pr
           {search && <Button asChild variant="outline"><Link href="/live#products">{t("clearSearch")}</Link></Button>}
         </form>
         {products.items.length === 0 ? <p>{t("noResults")}</p> : <ul>{products.items.map((p) => <li key={p.id} className="grid gap-2 border-b py-3"><strong>{p.name}</strong><p>{p.category} · {t(p.is_visible ? "active" : "hidden")}</p>
+          {p.photos.length > 0 && <div className="flex flex-wrap gap-3">{p.photos.map(photo => photo.url ? <Image key={photo.id} src={photo.url} alt={p.name} width={120} height={120} unoptimized className="rounded-lg object-cover" /> : <p key={photo.id} role="alert">{t("photoLoadFailed")}</p>)}</div>}
+          <PhotoUpload shopId={access.shopId} productId={p.id} photoCount={p.photos.length} />
           <ul>{p.product_variants.map(variant => <li key={variant.id}>{variant.size} · {variant.colour} · <bdi>Rs {Number(variant.unit_price).toLocaleString("en-PK")}</bdi> · {t("stock")}: {variant.stock_quantity}<VariantEditor variantCount={p.product_variants.length} variantId={variant.id} productId={p.id} version={variant.updated_at} size={variant.size} colour={variant.colour} price={Number(variant.unit_price)} stock={variant.stock_quantity} /></li>)}</ul>
           <AddVariantForm productId={p.id} variantCount={p.product_variants.length} />
           <VisibilityButton productId={p.id} visible={p.is_visible} />

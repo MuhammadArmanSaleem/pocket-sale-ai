@@ -12,7 +12,7 @@ A bilingual seller and super admin dashboard UI built with Next.js, TypeScript, 
 - English/Urdu translations, server-set document direction, Radix direction context and locale cookie.
 - Responsive layouts and keyboard-accessible primitives; browser/device acceptance remains pending.
 
-The root route opens the real Supabase account flow, with development admin and owner pages backed by the database. `/demo` redirects to the real account flow; the former sample workspace is not exposed as a route. The real catalogue can import up to 25 validated products per file as hidden products; imports stop on the first uncertain result and require inspection before retry. Real photo upload, WhatsApp and AI remain unfinished, and hosted acceptance tests are pending. Language preference persists in a cookie.
+The root route opens the real Supabase account flow, with development admin and owner pages backed by the database. `/demo` redirects to the real account flow; the former sample workspace is not exposed as a route. The real catalogue can import up to 25 validated products per file as hidden products; imports stop on the first uncertain result and require inspection before retry. A development photo upload flow uses private storage, with hosted verification, removal and orphan reconciliation pending. WhatsApp and AI remain unfinished. Language preference persists in a cookie.
 
 ## Run
 ```sh

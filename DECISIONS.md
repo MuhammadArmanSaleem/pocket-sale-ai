@@ -113,3 +113,13 @@ Preserve numbered entries; supersede explicitly rather than rewriting history. R
 - Consequences: Requires a server-only Supabase secret and manual recovery for partial failures. Password rotation, secure automated delivery, distributed rate limiting and hosted Auth testing remain outstanding. This is not production-ready.
 - Evidence: Input and orchestration tests cover successful creation and ambiguous failures; embedded database tests cover RPC privileges. Hosted Auth and real browser testing are pending.
 - Revisit when: A verified invitation/credential-delivery flow and idempotent reconciliation are implemented.
+
+## ADR-011 — Development product photo upload
+- Status: Implemented for development; hosted and browser acceptance pending.
+- Context: Owners need photos, while the existing private bucket and metadata table are separate services without a shared transaction.
+- Decision: Upload with the owner's session to an owner/product-scoped private path, then insert metadata. Display via five-minute signed URLs. Clean up the uploaded object only for a definite metadata rejection; stop and request inspection on ambiguous results. The existing six-image cap is a UI limit only.
+- Rationale: Preserve existing RLS boundaries and avoid deleting a file if metadata may have committed after a lost response.
+- Alternatives: Public image bucket; service-role uploads; automatic retry or deletion after uncertain failures.
+- Consequences: Upload may leave an orphan after an uncertain outcome; delete, reconciliation, enforced quotas, full file scanning and hosted verification remain pending. Signed URLs remain valid until expiry.
+- Evidence: File signature and size tests; existing database policy tests. Browser, Storage API and cross-tenant checks still need hosted tests.
+- Revisit when: Image deletion, orphan reconciliation and server-enforced quotas are implemented.

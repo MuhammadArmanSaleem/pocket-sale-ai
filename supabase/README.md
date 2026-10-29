@@ -6,20 +6,20 @@ This folder defines the first database structure. The dashboard still uses previ
 
 Run from repository root. Supabase CLI runs timestamped filenames in this order automatically:
 
-1. `migrations/20261028191245_core_schema.sql` — tables, constraints, indexes, timestamps; application tables start with RLS enabled and client grants revoked.
-2. `migrations/20261028191252_tenant_security.sql` — narrow client grants, owner isolation, admin directory/support access and support reply state updates.
-3. `migrations/20261028191259_product_storage.sql` — private product-image bucket and object access policies.
-4. `migrations/20261028203600_current_access.sql` — authenticated access lookup using trusted admin membership and shop status.
-5. `migrations/20261028204118_atomic_product_create.sql` — atomic owner product and variant creation.
-6. `migrations/20261028210425_atomic_support_ticket.sql` — atomic owner ticket and first-message creation.
-7. `migrations/20261029070919_provision_owner_records.sql` — trusted-only owner profile, shop and initial policy transaction.
-8. `migrations/20261029072747_remove_variant_safely.sql` — guarded variant removal RPC.
-9. `migrations/20261029073108_enforce_variant_removal.sql` — removes direct owner DELETE and restricts removal to the checked function.
-10. `migrations/20261029073756_add_variant_safely.sql` — owner-scoped variant creation with a per-product limit through the RPC.
-11. `migrations/20261029081143_enforce_variant_limit.sql` — applies the limit to direct inserts as well.
-12. `migrations/20261029082057_require_product_variant.sql` — rejects newly created products without variants at transaction end.
+1. `migrations/20261029105713_core_schema.sql` — tables, constraints, indexes, timestamps; application tables start with RLS enabled and client grants revoked.
+2. `migrations/20261029105743_tenant_security.sql` — narrow client grants, owner isolation, admin directory/support access and support reply state updates.
+3. `migrations/20261029105752_product_storage.sql` — private product-image bucket and object access policies.
+4. `migrations/20261029105801_current_access.sql` — authenticated access lookup using trusted admin membership and shop status.
+5. `migrations/20261029105817_atomic_product_create.sql` — atomic owner product and variant creation.
+6. `migrations/20261029105826_atomic_support_ticket.sql` — atomic owner ticket and first-message creation.
+7. `migrations/20261029105834_provision_owner_records.sql` — trusted-only owner profile, shop and initial policy transaction.
+8. `migrations/20261029105917_remove_variant_safely.sql` — guarded variant removal RPC.
+9. `migrations/20261029105950_enforce_variant_removal.sql` — removes direct owner DELETE and restricts removal to the checked function.
+10. `migrations/20261029105959_add_variant_safely.sql` — owner-scoped variant creation with a per-product limit through the RPC.
+11. `migrations/20261029110014_enforce_variant_limit.sql` — applies the limit to direct inserts as well.
+12. `migrations/20261029110025_require_product_variant.sql` — rejects newly created products without variants at transaction end.
 
-Do not run a later file first. These are one-time forward migrations, not repeatedly executable scripts. Create changes with `npx supabase migration new descriptive_name`; never edit applied migration history. The files were generated with CLI 2.122.0. No seed data or credentials are included.
+Do not run a later file first. These are one-time forward migrations, not repeatedly executable scripts. Create changes with `npx supabase migration new descriptive_name`; never edit applied migration history. These versions match the hosted migration history after connector-based deployment on 2026-10-29; the SQL contents and ordering are unchanged. Earlier local databases or other projects with the old timestamps have different migration history and must be reconciled deliberately before any migration push; do not blindly replay or reset them. No seed data or credentials are included.
 
 ## Run locally
 
@@ -41,7 +41,7 @@ npx supabase link --project-ref YOUR_PROJECT_REF
 npx supabase db push --dry-run
 ```
 
-Review the plan and backup/restore arrangements before deliberately running `npx supabase db push`. No hosted command has been executed for this change. Local `config.toml` disables signup; migrations do not change hosted Auth settings. Never expose service-role/secret keys in the browser.
+Review the plan and backup/restore arrangements before deliberately running `npx supabase db push`. The twelve migrations have been applied to project qeqfptszpsipnxcjgsxb; verify migration history before applying future changes. Local `config.toml` disables signup; migrations do not change hosted Auth settings. Never expose service-role/secret keys in the browser.
 
 ## Records and relationships
 
@@ -86,7 +86,7 @@ Support messages are append-only. A successful admin reply sets the ticket to `w
 
 `npm run test:db` applies every SQL file, in order, to fresh embedded PostgreSQL (PGlite) with minimal Auth/Storage test tables. It checks RLS, privileges, constraints, cross-shop access, role spoofing, support transitions, storage paths, suspended shops and unchanged stock after draft creation. CI runs it alongside existing application checks. Test identities are generated fixtures, never production records.
 
-This is not a hosted Supabase acceptance test: Auth issuance, PostgREST column grants, signed URLs, Storage uploads/content limits, Docker startup and concurrent writes still need end-to-end testing against a disposable Supabase project before wiring production UI. No database was deployed. UI remains in-memory.
+This is not a hosted Supabase acceptance test: Auth issuance, PostgREST column grants, signed URLs, Storage uploads/content limits, Docker startup and concurrent writes still need end-to-end testing against a disposable Supabase project before wiring production UI. The hosted schema is deployed, but real Auth and browser acceptance remain pending. The root preview remains in-memory.
 
 References reviewed: [RLS](https://supabase.com/docs/guides/database/postgres/row-level-security), [Storage access](https://supabase.com/docs/guides/storage/security/access-control), [local migrations](https://supabase.com/docs/guides/local-development/overview), [changelog](https://supabase.com/changelog). Schema avoids optional extensions and user-editable JWT role claims.
 

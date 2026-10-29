@@ -59,3 +59,10 @@ export async function updateProductDetailsAction(input: unknown): Promise<Produc
     return { ok: true };
   } catch { return { ok: false }; }
 }
+
+export async function updateVariantAction(input: unknown): Promise<ProductCreateResult> {
+  try {
+    const { updateVariant } = await import("@/lib/supabase/catalogue");
+    await updateVariant(input); revalidatePath("/live"); return { ok: true };
+  } catch { return { ok: false }; }
+}

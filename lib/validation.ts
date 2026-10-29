@@ -64,3 +64,13 @@ export const productDetailsSchema = yup.object({
   category: yup.string().max(60).defined(),
   description: yup.string().max(2000).defined(),
 }).noUnknown();
+
+export const variantEditSchema = yup.object({
+  variantId: yup.string().uuid().required(),
+  productId: yup.string().uuid().required(),
+  version: yup.string().datetime({ allowOffset: true }).required(),
+  size: yup.string().max(80).required().test("nonblank", "Required", value => Boolean(value?.trim())),
+  colour: yup.string().max(80).required().test("nonblank", "Required", value => Boolean(value?.trim())),
+  price: yup.number().strict().positive().max(9999999999.99).test("currency", "Invalid price", value => value === undefined || Math.abs(value * 100 - Math.round(value * 100)) < 0.000001).required(),
+  stock: yup.number().strict().integer().min(0).max(2147483647).required(),
+}).noUnknown();

@@ -67,6 +67,8 @@ try {
  await denied(`select public.provision_owner_records('${id(5)}','New owner','New shop','123')`);
  await denied(`insert into public.product_variants(shop_id,product_id,size,colour,unit_price,stock_quantity) values('${id(11)}','${id(22)}','S','Red',100,1)`);
  await denied(`insert into public.product_variants(shop_id,product_id,size,colour,unit_price,stock_quantity) values('${id(11)}','${id(21)}',' l ',' blue ',300,1)`);
+ await eq(`with changed as (update public.product_variants set stock_quantity=10 where id='${id(32)}' returning id) select count(*)::int as value from changed`,0);
+ await eq(`with changed as (update public.product_variants set stock_quantity=10 where id='${id(31)}' and updated_at='2000-01-01' returning id) select count(*)::int as value from changed`,0);
  await denied(`update public.product_variants set stock_quantity=-1 where id='${id(31)}'`);
  await denied(`update public.product_variants set unit_price=0 where id='${id(31)}'`);
  await denied(`update public.products set shop_id='${id(12)}' where id='${id(21)}'`);

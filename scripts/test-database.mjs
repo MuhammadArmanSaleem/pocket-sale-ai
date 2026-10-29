@@ -70,7 +70,9 @@ try {
  await denied(`insert into public.product_variants(shop_id,product_id,size,colour,unit_price,stock_quantity) values('${id(11)}','${id(21)}',' l ',' blue ',300,1)`);
  await eq(`with changed as (update public.product_variants set stock_quantity=10 where id='${id(32)}' returning id) select count(*)::int as value from changed`,0);
  await eq(`with changed as (update public.product_variants set stock_quantity=10 where id='${id(31)}' and updated_at='2000-01-01' returning id) select count(*)::int as value from changed`,0);
+ await denied(`delete from public.product_variants where id='${id(31)}'`);
  await denied(`select public.remove_product_variant('${id(12)}','${id(22)}','${id(32)}',now())`);
+ await denied(`select private.remove_product_variant_checked('${id(12)}','${id(22)}','${id(32)}',now())`);
  await denied(`select public.remove_product_variant('${id(11)}','${id(21)}','${id(31)}',now())`);
  await db.exec(`insert into public.product_variants(shop_id,product_id,size,colour,unit_price,stock_quantity) values('${id(11)}','${id(21)}','M','Black',100,2)`);
  const removable=(await db.query(`select id,updated_at from public.product_variants where product_id='${id(21)}' and size='M'`)).rows[0];

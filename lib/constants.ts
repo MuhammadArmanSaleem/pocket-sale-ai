@@ -29,3 +29,6 @@ export const MIN_NEW_PASSWORD_LENGTH = 12;
 export const MAX_PASSWORD_BYTES = 72;
 
 export const MAX_PRODUCT_VARIANTS = 100;
+
+export const CATALOGUE_PAGE_SIZE = 20;
+export const MAX_CATALOGUE_PAGE = 10000;

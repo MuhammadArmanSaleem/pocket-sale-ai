@@ -1,4 +1,5 @@
 import "server-only";
+import { CATALOGUE_PAGE_SIZE, MAX_CATALOGUE_PAGE } from "../constants";
 import { createClient } from "./server";
 import { getAccountAccess } from "./access";
 import { createProductSchema, productVisibilitySchema, productDetailsSchema, variantEditSchema, variantRemoveSchema, variantAddSchema } from "../validation";
@@ -22,7 +23,9 @@ export async function createProduct(input: unknown): Promise<string> {
   return data;
 }
 
-export async function listProducts() {
+export async function listProducts(page: number) {
+  if (!Number.isInteger(page) || page < 1 || page > MAX_CATALOGUE_PAGE) throw new Error("Invalid page");
+  const offset = (page - 1) * CATALOGUE_PAGE_SIZE;
   const access = await getAccountAccess();
   if (!access || access.role !== "owner") throw new Error("Access denied");
   const client = await createClient();
@@ -30,9 +33,10 @@ export async function listProducts() {
     .select("id,name,category,description,updated_at,is_visible,product_variants(id,size,colour,unit_price,stock_quantity,updated_at)")
     .eq("shop_id", access.shopId)
     .order("created_at", { ascending: false })
-    .limit(50);
+    .order("id", { ascending: false })
+    .range(offset, offset + CATALOGUE_PAGE_SIZE);
   if (error || !data) throw new Error("Unable to load products");
-  return data;
+  return { items: data.slice(0, CATALOGUE_PAGE_SIZE), hasNext: data.length > CATALOGUE_PAGE_SIZE && page < MAX_CATALOGUE_PAGE };
 }
 
 export async function setProductVisibility(input: unknown): Promise<void> {

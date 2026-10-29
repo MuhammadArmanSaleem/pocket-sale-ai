@@ -8,9 +8,11 @@ async function adminClient() {
   if (!access || access.role !== "admin") throw new Error("Access denied");
   return createClient();
 }
-export async function listAdminSupportTickets() {
+export async function listAdminSupportTickets(shopId?: string) {
   const client = await adminClient();
-  const { data, error } = await client.from("support_tickets").select("id,shop_id,subject,status,support_messages(id,body,author_role,created_at)").order("created_at", { ascending: false }).limit(50);
+  let query = client.from("support_tickets").select("id,shop_id,subject,status,support_messages(id,body,author_role,created_at)");
+  if (shopId) query = query.eq("shop_id", shopId);
+  const { data, error } = await query.order("created_at", { ascending: false }).limit(50);
   if (error || !data) throw new Error("Unable to load support tickets");
   return data;
 }

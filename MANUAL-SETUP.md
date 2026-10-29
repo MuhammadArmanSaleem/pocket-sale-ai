@@ -31,12 +31,11 @@ npx supabase db push --dry-run
 
 Follow the CLI's login prompts. If asked for the database password, enter the password you set for this **Supabase database**; it is not necessarily your dashboard password. Do not put it in the command, chat, or a screenshot. If you do not know it, stop and use Supabase's documented password recovery process.
 
-Check that the dry run lists the 12 files under `supabase/migrations/`, in filename order. The project was observed with no application migrations or public tables before setup; if the list or existing project state differs, stop and ask for a review before applying. Do not use `db reset` and do not paste the migration files manually into the SQL editor: that would bypass CLI migration history.
+Check that the dry run lists the 12 files under `supabase/migrations/`, in filename order. The twelve migrations were applied through the Supabase connector on 2026-10-29; the migration list should show matching local and remote versions. If it differs, stop and ask for a review. Do not use `db reset` and do not paste the migration files manually into the SQL editor: that would bypass CLI migration history.
 
-If the plan matches, apply it once and verify:
+If the dry run shows no pending migrations, the hosted schema is already up to date. Otherwise stop and ask for a review before applying anything. To verify:
 
 ```sh
-npx supabase db push
 npx supabase migration list
 ```
 

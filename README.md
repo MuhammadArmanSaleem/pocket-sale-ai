@@ -12,7 +12,7 @@ A bilingual seller and super admin dashboard UI built with Next.js, TypeScript, 
 - English/Urdu translations, server-set document direction, Radix direction context and locale cookie.
 - Responsive layouts and keyboard-accessible primitives; browser/device acceptance remains pending.
 
-All records are sample data. Changes live in React memory for the visit and reset on reload. Language preference persists in a cookie. Switching language refreshes server context while retaining the mounted client workspace. Real authentication, shop isolation, Supabase, Meta and AI are not integrated. Do not enter actual passwords or private customer information in this preview.
+The sample workspace is available at `/demo`; its records live in React memory and reset on reload. The root route opens the real Supabase account flow, with development admin and owner pages backed by the database. Real photo upload, persistent imports, WhatsApp and AI remain unfinished, and hosted acceptance tests are pending. Language preference persists in a cookie. Do not enter real customer information in the demo.
 
 ## Run
 ```sh
@@ -24,7 +24,7 @@ npm test
 npm run build
 ```
 
-Open localhost:3000. Use the preview form to enter owner setup; the role selector exposes the admin preview separately. Neither is authorization.
+Open localhost:3000 for the real account flow after configuring Supabase; `/demo` opens the sample workspace. The demo role selector is not authorization.
 
 ## Project guide
 [PRD](PRD.md) · [Architecture](ARCHITECTURE.md) · [Essentials](ARCHITECTURE-ESSENTIALS.md) · [Design](DESIGN.md) · [Decisions](DECISIONS.md) · [Frontend review](FRONTEND-REVIEW.md) · [Research](RESEARCH.md) · [Agent rules](AGENTS.md) · [Claude entry](CLAUDE.md)

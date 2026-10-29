@@ -130,6 +130,7 @@ try {
  const limitedProduct=(await db.query(`select id from public.products where name='Created atomically'`)).rows[0].id;
  await db.exec(`insert into public.product_variants(shop_id,product_id,size,colour,unit_price,stock_quantity) select '${id(11)}','${limitedProduct}','T' || n,'Black',1,0 from generate_series(1,99) n`);
  await denied(`select public.add_product_variant('${id(11)}','${limitedProduct}','Overflow','Black',1,0)`);
+ await denied(`insert into public.product_variants(shop_id,product_id,size,colour,unit_price,stock_quantity) values('${id(11)}','${limitedProduct}','Overflow','Black',1,0)`);
  await eq(`select count(*)::int as value from public.product_variants where product_id='${limitedProduct}'`,100);
  await db.exec(`reset role; update public.shops set is_active=false where id='${id(11)}';`);
  await login(1);

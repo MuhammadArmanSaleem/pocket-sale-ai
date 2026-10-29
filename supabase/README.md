@@ -16,6 +16,7 @@ Run from repository root. Supabase CLI runs timestamped filenames in this order 
 8. `migrations/20261029072747_remove_variant_safely.sql` — guarded variant removal RPC.
 9. `migrations/20261029073108_enforce_variant_removal.sql` — removes direct owner DELETE and restricts removal to the checked function.
 10. `migrations/20261029073756_add_variant_safely.sql` — owner-scoped variant creation with a per-product limit through the RPC.
+11. `migrations/20261029081143_enforce_variant_limit.sql` — applies the limit to direct inserts as well.
 
 Do not run a later file first. These are one-time forward migrations, not repeatedly executable scripts. Create changes with `npx supabase migration new descriptive_name`; never edit applied migration history. The files were generated with CLI 2.122.0. No seed data or credentials are included.
 
@@ -102,4 +103,4 @@ The `provision_owner_records` RPC is service-role-only and creates profile, shop
 
 The `remove_product_variant` RPC checks owner scope, locks the parent product, prevents deleting the last variant through the RPC and checks the variant version. Draft-referenced variants remain protected by foreign keys. Authenticated direct table DELETE is revoked by migration 9; a checked security-definer function in the private schema performs removal after verifying the authenticated owner and active shop. Existing direct inserts still permit products to be created without variants, so the schema does not guarantee every product starts with a variant. Concurrent requests and hosted security advisors have not yet been tested.
 
-The `add_product_variant` RPC locks the product and enforces a 100-variant limit for calls through that RPC. Direct owner INSERT remains granted and can bypass that limit; it is not yet a database-wide invariant. Hosted and concurrent behaviour remain unverified.
+The `add_product_variant` RPC locks the product and enforces a 100-variant limit for calls through that RPC. A trigger also checks direct inserts and locks the parent product. Hosted and concurrent behaviour remain unverified.

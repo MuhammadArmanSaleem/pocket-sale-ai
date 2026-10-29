@@ -74,3 +74,5 @@ export const variantEditSchema = yup.object({
   price: yup.number().strict().positive().max(9999999999.99).test("currency", "Invalid price", value => value === undefined || Math.abs(value * 100 - Math.round(value * 100)) < 0.000001).required(),
   stock: yup.number().strict().integer().min(0).max(2147483647).required(),
 }).noUnknown();
+
+export const variantRemoveSchema = variantEditSchema.pick(["variantId", "productId", "version"]).noUnknown();

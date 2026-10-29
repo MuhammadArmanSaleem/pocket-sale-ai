@@ -13,6 +13,7 @@ Run from repository root. Supabase CLI runs timestamped filenames in this order 
 5. `migrations/20261028204118_atomic_product_create.sql` — atomic owner product and variant creation.
 6. `migrations/20261028210425_atomic_support_ticket.sql` — atomic owner ticket and first-message creation.
 7. `migrations/20261029070919_provision_owner_records.sql` — trusted-only owner profile, shop and initial policy transaction.
+8. `migrations/20261029072747_remove_variant_safely.sql` — guarded variant removal RPC.
 
 Do not run a later file first. These are one-time forward migrations, not repeatedly executable scripts. Create changes with `npx supabase migration new descriptive_name`; never edit applied migration history. The files were generated with CLI 2.122.0. No seed data or credentials are included.
 
@@ -96,3 +97,5 @@ Before production: disable hosted public signup, provision trusted users, implem
 The authenticated account page checks the current password with a separate, non-persisted Auth client and revokes that verification session before updating the current session. The application currently requires a minimum of 12 characters and maximum 72 UTF-8 bytes for new passwords; hosted Auth policy may be stricter. Configure hosted current-password and secure-password-change settings deliberately. Email nonce reauthentication, password reset, distributed rate limiting and MFA are not implemented by this path. Actual Auth behaviour has not been integration-tested.
 
 The `provision_owner_records` RPC is service-role-only and creates profile, shop and initial policy atomically. It does not create an Auth user, send an invitation, check an admin caller or implement retry/idempotency. A future trusted server must verify the admin and handle Auth/database partial failure explicitly; do not expose the secret key.
+
+The `remove_product_variant` RPC checks owner scope, locks the parent product, prevents deleting the last variant through the RPC and checks the variant version. Draft-referenced variants remain protected by foreign keys. Direct owner table DELETE remains granted and can bypass the RPC minimum-count check; remove that grant or enforce an equivalent database-wide rule before treating the minimum as a security invariant. Concurrent requests through direct table operations have not been tested.

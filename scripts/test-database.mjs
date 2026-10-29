@@ -34,6 +34,7 @@ try {
  await denied('select * from public.products');
  await denied('select * from public.profiles');
  await denied('select * from public.current_access()');
+ await denied(`select public.remove_product_variant('${id(11)}','${id(21)}','${id(31)}',now())`);
  await denied(`select public.provision_owner_records('${id(5)}','New owner','New shop','123')`);
  await denied(`select public.create_support_ticket('${id(11)}','No','No')`);
  await denied(`select public.create_product_with_variants('${id(11)}','Test','','',true,'[]')`);
@@ -69,6 +70,13 @@ try {
  await denied(`insert into public.product_variants(shop_id,product_id,size,colour,unit_price,stock_quantity) values('${id(11)}','${id(21)}',' l ',' blue ',300,1)`);
  await eq(`with changed as (update public.product_variants set stock_quantity=10 where id='${id(32)}' returning id) select count(*)::int as value from changed`,0);
  await eq(`with changed as (update public.product_variants set stock_quantity=10 where id='${id(31)}' and updated_at='2000-01-01' returning id) select count(*)::int as value from changed`,0);
+ await denied(`select public.remove_product_variant('${id(12)}','${id(22)}','${id(32)}',now())`);
+ await denied(`select public.remove_product_variant('${id(11)}','${id(21)}','${id(31)}',now())`);
+ await db.exec(`insert into public.product_variants(shop_id,product_id,size,colour,unit_price,stock_quantity) values('${id(11)}','${id(21)}','M','Black',100,2)`);
+ const removable=(await db.query(`select id,updated_at from public.product_variants where product_id='${id(21)}' and size='M'`)).rows[0];
+ await denied(`select public.remove_product_variant('${id(11)}','${id(21)}','${removable.id}','2000-01-01')`);
+ await db.exec(`select public.remove_product_variant('${id(11)}','${id(21)}','${removable.id}',(select updated_at from public.product_variants where id='${removable.id}'))`);
+ await eq(`select count(*)::int as value from public.product_variants where product_id='${id(21)}'`,1);
  await denied(`update public.product_variants set stock_quantity=-1 where id='${id(31)}'`);
  await denied(`update public.product_variants set unit_price=0 where id='${id(31)}'`);
  await denied(`update public.products set shop_id='${id(12)}' where id='${id(21)}'`);
@@ -76,6 +84,9 @@ try {
  const draft=(await db.query('select id from public.order_drafts')).rows[0].id;
  await db.exec(`insert into public.order_draft_items(shop_id,draft_id,variant_id,quantity,product_name_snapshot,size_snapshot,colour_snapshot,unit_price_snapshot) values('${id(11)}','${draft}','${id(31)}',100,'Shirt A','L','Blue',300)`);
  await eq(`select stock_quantity as value from public.product_variants where id='${id(31)}'`,4);
+ await db.exec(`insert into public.product_variants(shop_id,product_id,size,colour,unit_price,stock_quantity) values('${id(11)}','${id(21)}','XL','Green',100,2)`);
+ await denied(`select public.remove_product_variant('${id(11)}','${id(21)}','${id(31)}',(select updated_at from public.product_variants where id='${id(31)}'))`);
+ await eq(`select count(*)::int as value from public.product_variants where id='${id(31)}'`,1);
  await denied(`insert into public.order_draft_items(shop_id,draft_id,variant_id,quantity,product_name_snapshot,size_snapshot,colour_snapshot,unit_price_snapshot) values('${id(11)}','${draft}','${id(32)}',1,'Other','M','White',300)`);
  await denied(`select public.create_support_ticket('${id(12)}','Intrusion','Hi')`);
  await denied(`select public.create_support_ticket('${id(11)}','Invalid ticket',' ')`);

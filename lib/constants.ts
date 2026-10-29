@@ -9,6 +9,7 @@ export const COOKIE_MAX_AGE = 31536000;
 export const SHOP_ID = "studio";
 export const MAX_IMPORT_BYTES = 2 * 1024 * 1024;
 export const MAX_IMPORT_ROWS = 500;
+export const MAX_LIVE_IMPORT_PRODUCTS = 25;
 export const MAX_PHOTO_BYTES = 5 * 1024 * 1024;
 export const MAX_PHOTOS = 6;
 export const IMPORT_HEADERS = [

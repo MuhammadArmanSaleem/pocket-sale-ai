@@ -1,4 +1,9 @@
 const en = {
+  liveImportHint: "Import up to 25 products per file. Products are saved as hidden; existing products are not matched or updated. Photos are not uploaded.",
+  liveImportPending: "Saving products. Please keep this page open.",
+  liveImportInvalid: "Check the file: use up to 25 products with valid names, variants, prices and stock.",
+  liveImportSuccess: "Saved {count} products as hidden.",
+  liveImportPartial: "Import stopped after {count} confirmed products. Check the catalogue before trying again: the next product may also have been saved.",
   ownerEmailError: "Enter a valid email address (up to 254 characters).",
   ownerNameError: "Enter the owner's name (up to 120 characters).",
   ownerShopError: "Enter the shop name (up to 160 characters).",

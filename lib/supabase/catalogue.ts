@@ -1,7 +1,7 @@
 import "server-only";
 import { createClient } from "./server";
 import { getAccountAccess } from "./access";
-import { createProductSchema } from "../validation";
+import { createProductSchema, productVisibilitySchema } from "../validation";
 
 // This entry point is not yet connected to the preview catalogue.
 // Derive shop scope on the server; do not accept it from the caller.
@@ -27,10 +27,21 @@ export async function listProducts() {
   if (!access || access.role !== "owner") throw new Error("Access denied");
   const client = await createClient();
   const { data, error } = await client.from("products")
-    .select("id,name,category,is_visible")
+    .select("id,name,category,is_visible,product_variants(id,size,colour,unit_price,stock_quantity)")
     .eq("shop_id", access.shopId)
     .order("created_at", { ascending: false })
     .limit(50);
   if (error || !data) throw new Error("Unable to load products");
   return data;
+}
+
+export async function setProductVisibility(input: unknown): Promise<void> {
+  const access = await getAccountAccess();
+  if (!access || access.role !== "owner") throw new Error("Access denied");
+  const value = await productVisibilitySchema.validate(input, { strict: true, abortEarly: false });
+  const client = await createClient();
+  const { data, error } = await client.from("products").update({ is_visible: value.visible })
+    .eq("shop_id", access.shopId).eq("id", value.productId).eq("is_visible", !value.visible)
+    .select("id").maybeSingle();
+  if (error || !data) throw new Error("Product not found or changed");
 }

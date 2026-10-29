@@ -41,3 +41,12 @@ export async function replySupportAction(input: unknown): Promise<ProductCreateR
     return { ok: true };
   } catch { return { ok: false }; }
 }
+
+export async function productVisibilityAction(input: unknown): Promise<ProductCreateResult> {
+  try {
+    const { setProductVisibility } = await import("@/lib/supabase/catalogue");
+    await setProductVisibility(input);
+    revalidatePath("/live");
+    return { ok: true };
+  } catch { return { ok: false }; }
+}

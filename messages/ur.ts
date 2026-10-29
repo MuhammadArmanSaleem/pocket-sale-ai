@@ -7,6 +7,7 @@ const ur: Record<keyof typeof en, string> = {
   passwordInvalid: "پاس ورڈ کی لمبائی اور دونوں نئے پاس ورڈ کی مطابقت چیک کریں۔",
   passwordChangeFailed: "پاس ورڈ تبدیل نہیں ہوا۔ موجودہ پاس ورڈ چیک کریں یا بعد میں کوشش کریں۔",
   passwordChanged: "پاس ورڈ تبدیل ہو گیا۔",
+  visibilityFailed: "حیثیت اپ ڈیٹ نہیں ہوئی۔ ممکن ہے مصنوعات بدل گئی ہو؛ دوبارہ کوشش کریں۔",
   variantNumber: "ویریئنٹ {number}",
   shopActive: "فعال دکان",
   shopSuspended: "معطل دکان",

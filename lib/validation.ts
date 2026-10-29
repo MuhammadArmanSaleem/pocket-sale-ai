@@ -51,3 +51,8 @@ export const passwordChangeSchema = yup.object({
   newPassword: yup.string().required().min(MIN_NEW_PASSWORD_LENGTH).test("bytes", "Password too long", value => value === undefined || new TextEncoder().encode(value).length <= MAX_PASSWORD_BYTES),
   confirmPassword: yup.string().required().oneOf([yup.ref("newPassword")]),
 }).noUnknown();
+
+export const productVisibilitySchema = yup.object({
+  productId: yup.string().uuid().required(),
+  visible: yup.boolean().strict().required(),
+}).noUnknown();

@@ -44,6 +44,10 @@ try {
  await eq('select shop_active as value from public.current_access()', true);
  await eq('select count(*)::int as value from public.products',1);
  await eq('select count(*)::int as value from public.shops',1);
+ await eq(`with changed as (update public.products set is_visible=false where id='${id(22)}' and is_visible=true returning id) select count(*)::int as value from changed`,0);
+ await eq(`with changed as (update public.products set is_visible=false where id='${id(21)}' and is_visible=true returning id) select count(*)::int as value from changed`,1);
+ await eq(`with changed as (update public.products set is_visible=false where id='${id(21)}' and is_visible=true returning id) select count(*)::int as value from changed`,0);
+ await db.exec(`update public.products set is_visible=true where id='${id(21)}'`);
  await eq(`with changed as (update public.shop_policies set returns_policy='Intrusion' where shop_id='${id(12)}' returning shop_id) select count(*)::int as value from changed`,0);
  await eq(`with changed as (update public.shop_policies set returns_policy='Updated' where shop_id='${id(11)}' returning shop_id) select count(*)::int as value from changed`,1);
  await denied(`select public.create_product_with_variants('${id(12)}','Intrusion','','',true,'[{"size":"M","colour":"red","price":1,"stock":1}]')`);

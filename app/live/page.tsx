@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import { getAccountAccess } from "@/lib/supabase/access";
 import { listProducts } from "@/lib/supabase/catalogue";
+import { VisibilityButton } from "./visibility-button";
 import { ProductForm } from "./product-form";
 import { PolicyForm } from "./policy-form";
 import { loadShopPolicy } from "@/lib/supabase/policies";
@@ -27,7 +28,10 @@ export default async function LiveCatalogue() {
       <ProductForm />
       {policy ? <PolicyForm initial={policy} /> : <p>{t("policyMissing")}</p>}
       <section><h2>{t("products")}</h2>
-        {products.length === 0 ? <p>{t("noResults")}</p> : <ul>{products.map((p) => <li key={p.id} className="border-b py-3"><strong>{p.name}</strong> · {p.category} · {t(p.is_visible ? "active" : "hidden")}</li>)}</ul>}
+        {products.length === 0 ? <p>{t("noResults")}</p> : <ul>{products.map((p) => <li key={p.id} className="grid gap-2 border-b py-3"><strong>{p.name}</strong><p>{p.category} · {t(p.is_visible ? "active" : "hidden")}</p>
+          <ul>{p.product_variants.map(variant => <li key={variant.id}>{variant.size} · {variant.colour} · <bdi>Rs {Number(variant.unit_price).toLocaleString("en-PK")}</bdi> · {t("stock")}: {variant.stock_quantity}</li>)}</ul>
+          <VisibilityButton productId={p.id} visible={p.is_visible} />
+        </li>)}</ul>}
       </section>
       <section className="surface grid gap-4 p-6"><h2>{t("supportTitle")}</h2><SupportForm />
         {tickets.map(ticket => <article key={ticket.id} className="grid gap-3 border-t pt-4"><h3>{ticket.subject}</h3><p>{ticket.status}</p>

@@ -103,3 +103,13 @@ Preserve numbered entries; supersede explicitly rather than rewriting history. R
 - Consequences: Provisioning and upload cleanup need trusted server flows; SQL does not itself wire UI/Auth APIs. PKR/photo limits remain provisional. Reply insertion atomically reopens owner tickets or marks admin replies waiting.
 - Evidence: Embedded PostgreSQL migration/security tests and official Supabase RLS/Storage guidance; exact limitations and commands in supabase/README.md. No hosted project was modified.
 - Revisit when: Credential lifecycle, final currency/image requirements, staff/multi-shop needs or order confirmation rules are approved.
+
+## ADR-010 — Development owner provisioning with explicit partial-failure handling
+- Status: Implemented for development; hosted acceptance and credential-delivery workflow pending.
+- Context: An administrator needs to create an owner and shop, but Supabase Auth creation and the database transaction cannot be committed together.
+- Decision: Verify administrator membership on each server action, create the Auth identity with a manually supplied initial password, and create application records through the service-only RPC. If either result is uncertain, stop retries and require manual inspection; do not automatically delete an identity after a potentially committed transaction. The administrator verifies email ownership and delivers credentials securely outside the app.
+- Rationale: Prevent role spoofing and avoid making an uncertain cross-service failure worse by retrying or deleting records blindly.
+- Alternatives: Public signup; automatic identity deletion; email invitation without a complete invitation acceptance flow.
+- Consequences: Requires a server-only Supabase secret and manual recovery for partial failures. Password rotation, secure automated delivery, distributed rate limiting and hosted Auth testing remain outstanding. This is not production-ready.
+- Evidence: Input and orchestration tests cover successful creation and ambiguous failures; embedded database tests cover RPC privileges. Hosted Auth and real browser testing are pending.
+- Revisit when: A verified invitation/credential-delivery flow and idempotent reconciliation are implemented.

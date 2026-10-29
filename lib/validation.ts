@@ -52,6 +52,14 @@ export const passwordChangeSchema = yup.object({
   confirmPassword: yup.string().required().oneOf([yup.ref("newPassword")]),
 }).noUnknown();
 
+export const ownerProvisionSchema = yup.object({
+  email: yup.string().trim().email().max(254).required(),
+  password: yup.string().required().min(MIN_NEW_PASSWORD_LENGTH).test("bytes", "Password too long", value => value === undefined || new TextEncoder().encode(value).length <= MAX_PASSWORD_BYTES),
+  ownerName: yup.string().trim().max(120).required(),
+  shopName: yup.string().trim().max(160).required(),
+  phone: yup.string().trim().matches(/^\+?[0-9]{7,15}$/).required(),
+}).noUnknown();
+
 export const productVisibilitySchema = yup.object({
   productId: yup.string().uuid().required(),
   visible: yup.boolean().strict().required(),

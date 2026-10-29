@@ -27,6 +27,7 @@ import type {
   ProductEditorProps,
 } from "@/lib/types";
 import { findDuplicateVariant } from "@/lib/variants";
+import { normalizeLeadingZeroes } from "@/lib/numbers";
 import { ImportDialog } from "./import-dialog";
 export function Catalogue({
   policies,
@@ -209,6 +210,7 @@ export function Catalogue({
               min={0}
               name="deliveryCharges"
               defaultValue={policies.deliveryCharges}
+              onBlur={(e) => { e.currentTarget.value = normalizeLeadingZeroes(e.currentTarget.value); }}
               required
             />
             <Label className="field">
@@ -423,8 +425,7 @@ function ProductEditor({
           min="0.01"
           step="0.01"
           value={commonPrice}
-          onChange={(e) => setCommonPrice(e.target.value)}
-          onBlur={(e) => setCommonPrice(e.target.value.replace(/^0+(?=\d)/, ""))}
+          onChange={(e) => setCommonPrice(normalizeLeadingZeroes(e.target.value))}
           required
         />
       )}
@@ -470,8 +471,7 @@ function ProductEditor({
               min="0.01"
               step="0.01"
               value={v.price}
-              onChange={(e) => update(v.id, { price: e.target.value })}
-              onBlur={(e) => update(v.id, { price: e.target.value.replace(/^0+(?=\d)/, "") })}
+              onChange={(e) => update(v.id, { price: normalizeLeadingZeroes(e.target.value) })}
               required
             />
           )}
@@ -481,8 +481,7 @@ function ProductEditor({
             min={0}
             step={1}
             value={v.stock}
-            onChange={(e) => update(v.id, { stock: e.target.value })}
-            onBlur={(e) => update(v.id, { stock: e.target.value.replace(/^0+(?=\d)/, "") })}
+            onChange={(e) => update(v.id, { stock: normalizeLeadingZeroes(e.target.value) })}
             required
           />
           <Button

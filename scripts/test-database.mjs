@@ -23,7 +23,7 @@ try {
  grant usage on schema public to anon,authenticated,service_role;`);
  const folder = new URL('../supabase/migrations/', import.meta.url);
  for (const file of (await readdir(folder)).filter((f) => f.endsWith('.sql')).sort()) await db.exec(await readFile(new URL(file,folder),'utf8'));
- await db.exec(`insert into auth.users values('${id(1)}'),('${id(2)}'),('${id(3)}'),('${id(4)}');
+ await db.exec(`insert into auth.users values('${id(1)}'),('${id(2)}'),('${id(3)}'),('${id(4)}'),('${id(5)}'),('${id(6)}');
  insert into public.profiles(user_id,display_name) values('${id(1)}','Owner A'),('${id(2)}','Owner B'),('${id(3)}','Admin');
  insert into private.admin_users(user_id) values('${id(3)}');
  insert into public.shops(id,owner_user_id,name) values('${id(11)}','${id(1)}','A'),('${id(12)}','${id(2)}','B');
@@ -34,6 +34,7 @@ try {
  await denied('select * from public.products');
  await denied('select * from public.profiles');
  await denied('select * from public.current_access()');
+ await denied(`select public.provision_owner_records('${id(5)}','New owner','New shop','123')`);
  await denied(`select public.create_support_ticket('${id(11)}','No','No')`);
  await denied(`select public.create_product_with_variants('${id(11)}','Test','','',true,'[]')`);
  await login(4);
@@ -57,6 +58,7 @@ try {
  await denied(`update public.shops set owner_user_id='${id(2)}' where id='${id(11)}'`);
  await denied(`update public.shops set is_active=false where id='${id(11)}'`);
  await denied(`insert into private.admin_users(user_id) values('${id(1)}')`);
+ await denied(`select public.provision_owner_records('${id(5)}','New owner','New shop','123')`);
  await denied(`insert into public.product_variants(shop_id,product_id,size,colour,unit_price,stock_quantity) values('${id(11)}','${id(22)}','S','Red',100,1)`);
  await denied(`insert into public.product_variants(shop_id,product_id,size,colour,unit_price,stock_quantity) values('${id(11)}','${id(21)}',' l ',' blue ',300,1)`);
  await denied(`update public.product_variants set stock_quantity=-1 where id='${id(31)}'`);
@@ -103,6 +105,18 @@ try {
  await eq('select count(*)::int as value from public.products',0);
  await eq('select count(*)::int as value from storage.objects',0);
  await denied(`insert into public.products(shop_id,name) values('${id(11)}','Suspended')`);
+ await db.exec(`reset role;
+ create function public.test_reject_shop() returns trigger language plpgsql as $$ begin if new.name='Fail shop' then raise exception 'Injected failure'; end if; return new; end $$;
+ create trigger test_reject_shop before insert on public.shops for each row execute function public.test_reject_shop();
+ set role service_role;`);
+ await denied(`select public.provision_owner_records('${id(6)}','Test owner','Fail shop','123')`);
+ await eq(`select count(*)::int as value from public.profiles where user_id='${id(6)}'`,0);
+ await denied(`select public.provision_owner_records('${id(5)}','New owner',' ','123')`);
+ await eq(`select count(*)::int as value from public.profiles where user_id='${id(5)}'`,0);
+ await db.exec(`select public.provision_owner_records('${id(5)}','New owner','New shop','123')`);
+ await eq(`select count(*)::int as value from public.shops where owner_user_id='${id(5)}'`,1);
+ await eq(`select count(*)::int as value from public.shop_policies p join public.shops s on s.id=p.shop_id where s.owner_user_id='${id(5)}'`,1);
+ await denied(`select public.provision_owner_records('${id(5)}','New owner','New shop','123')`);
  await db.exec('reset role;');
  await eq("select count(*)::int as value from pg_tables where schemaname='public' and not rowsecurity",0);
  console.log(`Database checks passed: ${checks}. All migrations applied in filename order. Auth/Storage HTTP APIs were not exercised.`);

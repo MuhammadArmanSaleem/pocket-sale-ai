@@ -12,6 +12,7 @@ Run from repository root. Supabase CLI runs timestamped filenames in this order 
 4. `migrations/20261028203600_current_access.sql` — authenticated access lookup using trusted admin membership and shop status.
 5. `migrations/20261028204118_atomic_product_create.sql` — atomic owner product and variant creation.
 6. `migrations/20261028210425_atomic_support_ticket.sql` — atomic owner ticket and first-message creation.
+7. `migrations/20261029070919_provision_owner_records.sql` — trusted-only owner profile, shop and initial policy transaction.
 
 Do not run a later file first. These are one-time forward migrations, not repeatedly executable scripts. Create changes with `npx supabase migration new descriptive_name`; never edit applied migration history. The files were generated with CLI 2.122.0. No seed data or credentials are included.
 
@@ -93,3 +94,5 @@ Before production: disable hosted public signup, provision trusted users, implem
 ## Password change (work in progress)
 
 The authenticated account page checks the current password with a separate, non-persisted Auth client and revokes that verification session before updating the current session. The application currently requires a minimum of 12 characters and maximum 72 UTF-8 bytes for new passwords; hosted Auth policy may be stricter. Configure hosted current-password and secure-password-change settings deliberately. Email nonce reauthentication, password reset, distributed rate limiting and MFA are not implemented by this path. Actual Auth behaviour has not been integration-tested.
+
+The `provision_owner_records` RPC is service-role-only and creates profile, shop and initial policy atomically. It does not create an Auth user, send an invitation, check an admin caller or implement retry/idempotency. A future trusted server must verify the admin and handle Auth/database partial failure explicitly; do not expose the secret key.

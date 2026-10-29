@@ -4,6 +4,7 @@ import { useFormik } from "formik";
 import { loginSchema } from "@/lib/validation";
 import { useLocale, useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import {
   Package,
   MessagesSquare,
@@ -152,6 +153,7 @@ export function Workspace() {
               <Badge variant="secondary" className="mb-6">
                 {t("demo")}
               </Badge>
+              <div className="mb-5"><Link href="/entry" className="font-semibold underline">{t("openRealAccount")}</Link></div>
               <h1 className="text-4xl leading-tight md:text-5xl">
                 {t("tagline")}
               </h1>

@@ -10,6 +10,14 @@ Run from repository root. Supabase CLI runs timestamped filenames in this order 
 2. `migrations/20261028191252_tenant_security.sql` — narrow client grants, owner isolation, admin directory/support access and support reply state updates.
 3. `migrations/20261028191259_product_storage.sql` — private product-image bucket and object access policies.
 4. `migrations/20261028203600_current_access.sql` — authenticated access lookup using trusted admin membership and shop status.
+5. `migrations/20261028204118_atomic_product_create.sql` — atomic owner product and variant creation.
+6. `migrations/20261028210425_atomic_support_ticket.sql` — atomic owner ticket and first-message creation.
+7. `migrations/20261029070919_provision_owner_records.sql` — trusted-only owner profile, shop and initial policy transaction.
+8. `migrations/20261029072747_remove_variant_safely.sql` — guarded variant removal RPC.
+9. `migrations/20261029073108_enforce_variant_removal.sql` — removes direct owner DELETE and restricts removal to the checked function.
+10. `migrations/20261029073756_add_variant_safely.sql` — owner-scoped variant creation with a per-product limit through the RPC.
+11. `migrations/20261029081143_enforce_variant_limit.sql` — applies the limit to direct inserts as well.
+12. `migrations/20261029082057_require_product_variant.sql` — rejects newly created products without variants at transaction end.
 
 Do not run a later file first. These are one-time forward migrations, not repeatedly executable scripts. Create changes with `npx supabase migration new descriptive_name`; never edit applied migration history. The files were generated with CLI 2.122.0. No seed data or credentials are included.
 
@@ -53,7 +61,7 @@ Child records carry `shop_id` and composite foreign keys so a variant, photo, or
 
 An owner can manage only their active shop's catalogue, policies, drafts and support. They cannot change ownership, active state, author identity or admin membership. A disabled shop retains its own profile/shop directory read but loses catalogue/files/support access. Admin can read the owner directory and all support tickets, reply and change ticket status. Admin receives no general customer-order or catalogue access. Trusted server credentials bypass RLS and require separate server authorization.
 
-Owners hide products rather than hard-delete them. Unreferenced variants/images may be removed; draft-referenced variants are protected. Deleting a draft deletes its items. No account/shop deletion endpoint is defined. Product creation with variants and imports should later be implemented as server transactions; this schema does not yet enforce a minimum variant count or implement import reconciliation. `is_visible` is stored only; there is no buyer/public catalogue access yet.
+Owners hide products rather than hard-delete them. Unreferenced variants/images may be removed; draft-referenced variants are protected. Deleting a draft deletes its items. No account/shop deletion endpoint is defined. Product creation can use `create_product_with_variants`, which atomically creates a product and its variants and enforces a minimum variant count for that RPC. Direct table inserts are still allowed by existing grants, and edits and imports need their own transactional flows; import reconciliation remains unimplemented. `is_visible` is stored only; there is no buyer/public catalogue access yet.
 
 ## Provisioning (trusted backend work still pending)
 
@@ -87,3 +95,15 @@ References reviewed: [RLS](https://supabase.com/docs/guides/database/postgres/ro
 Copy `.env.example` to `.env.local` and set the project's public URL and publishable key. Do not commit `.env.local` or put secret/service-role keys in public variables. `/auth-check` exercises sign-in and sign-out using Supabase Auth; it is not the production login or a role check. Next.js proxy refreshes session cookies. The preview dashboard still accepts demo credentials and must never be treated as protected or deployed as a production workspace.
 
 Before production: disable hosted public signup, provision trusted users, implement server-verified roles and account status, replace preview entry, add rate limits, MFA and reset flows, and test real authenticated sessions and tenant isolation. No migrations are applied by the SSR client setup.
+
+## Password change (work in progress)
+
+The authenticated account page checks the current password with a separate, non-persisted Auth client and revokes that verification session before updating the current session. The application currently requires a minimum of 12 characters and maximum 72 UTF-8 bytes for new passwords; hosted Auth policy may be stricter. Configure hosted current-password and secure-password-change settings deliberately. Email nonce reauthentication, password reset, distributed rate limiting and MFA are not implemented by this path. Actual Auth behaviour has not been integration-tested.
+
+The `provision_owner_records` RPC is service-role-only and creates profile, shop and initial policy atomically. It does not create an Auth user, send an invitation, check an admin caller or implement retry/idempotency. A future trusted server must verify the admin and handle Auth/database partial failure explicitly; do not expose the secret key.
+
+The `remove_product_variant` RPC checks owner scope, locks the parent product, prevents deleting the last variant through the RPC and checks the variant version. Draft-referenced variants remain protected by foreign keys. Authenticated direct table DELETE is revoked by migration 9; a checked security-definer function in the private schema performs removal after verifying the authenticated owner and active shop. Migration 12 adds a deferred check for newly inserted products, allowing the first variants to be inserted in the same transaction. Existing products are not retroactively checked. Concurrent requests and hosted security advisors have not yet been tested.
+
+The `add_product_variant` RPC locks the product and enforces a 100-variant limit for calls through that RPC. A trigger also checks direct inserts and locks the parent product. Hosted and concurrent behaviour remain unverified.
+
+The work-in-progress owner catalogue uses offset pagination of 20 products, bounded to 10,000 pages. Ordering is by creation time and ID; concurrent inserts can shift items between pages. Search, keyset pagination and hosted performance verification remain pending.

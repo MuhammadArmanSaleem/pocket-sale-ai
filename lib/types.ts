@@ -160,3 +160,27 @@ export type AccountAccess =
   | { role: "owner"; shopId: string }
   | { role: "suspended" }
   | { role: "unprovisioned" };
+
+export interface ProductCreateInput {
+  name: string;
+  category: string;
+  description: string;
+  visible: boolean;
+  variants: Array<{ size: string; colour: string; price: number; stock: number }>;
+}
+export type ProductCreateResult = { ok: true } | { ok: false };
+export interface RealProductSummary {
+  id: string;
+  name: string;
+  category: string;
+  is_visible: boolean;
+}
+
+export interface ShopPolicyInput {
+  deliveryTime: string;
+  deliveryCharge: number;
+  returnsPolicy: string;
+}
+
+export interface SupportTicketInput { subject: string; body: string }
+export interface SupportReplyInput { ticketId: string; body: string }

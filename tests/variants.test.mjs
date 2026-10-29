@@ -32,3 +32,7 @@ test("normalizes case/whitespace and allows distinct combinations", () => {
     2,
   );
 });
+
+test("ignores incomplete rows when identifying duplicate combinations", () => {
+  assert.equal(findDuplicateVariant([variant("1", "", "", 0), variant("2", "", "", 0)]), null);
+});

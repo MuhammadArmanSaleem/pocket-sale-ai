@@ -23,3 +23,12 @@ export const isLocale = (value: unknown): value is Locale =>
   value === "en" || value === "ur";
 
 export const PHOTO_MIME_TYPES = ["image/png", "image/jpeg", "image/webp"];
+
+// Provisional application password bounds; hosted Auth settings also apply.
+export const MIN_NEW_PASSWORD_LENGTH = 12;
+export const MAX_PASSWORD_BYTES = 72;
+
+export const MAX_PRODUCT_VARIANTS = 100;
+
+export const CATALOGUE_PAGE_SIZE = 20;
+export const MAX_CATALOGUE_PAGE = 10000;

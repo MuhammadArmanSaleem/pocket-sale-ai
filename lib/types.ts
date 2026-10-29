@@ -194,5 +194,5 @@ export interface OwnerProvisionInput {
 }
 export type OwnerProvisionResult =
   | { status: "success" }
-  | { status: "invalid" | "unauthorized" | "unavailable" | "review" }
+  | { status: "invalid" | "unauthorized" | "unavailable" | "review" | "duplicate" | "weak_password" | "rate_limited" }
   | { status: "partial"; userId: string };

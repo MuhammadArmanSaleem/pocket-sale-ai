@@ -1,7 +1,7 @@
 "use client";
 import { useState, useTransition } from "react";
 import { useFormik } from "formik";
-import { loginSchema } from "@/lib/validation";
+import { loginSchema, previewOwnerSchema } from "@/lib/validation";
 import { useLocale, useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
@@ -111,6 +111,14 @@ export function Workspace() {
     initialValues: { email: "owner@example.com", password: "preview-only" },
     validationSchema: loginSchema,
     onSubmit: () => setStage(role === "admin" ? "workspace" : "setup"),
+  });
+  const ownerForm = useFormik({
+    initialValues: { shopName: "", ownerName: "", email: "", password: "" },
+    validationSchema: previewOwnerSchema,
+    onSubmit: (values, helpers) => {
+      setShops(s => [...s, { id: crypto.randomUUID(), name: values.shopName.trim(), owner: values.ownerName.trim(), email: values.email.trim(), connected: false }]);
+      helpers.resetForm(); setOwnerDialog(false); setNotice(t("ownerCreated"));
+    },
   });
   const nav = <Nav items={navigation} current={page} go={go} />;
   const controls = (
@@ -769,7 +777,7 @@ export function Workspace() {
           </div>
         </SheetContent>
       </Sheet>
-      <Dialog open={ownerDialog} onOpenChange={setOwnerDialog}>
+      <Dialog open={ownerDialog} onOpenChange={(open) => { if (!open) ownerForm.resetForm(); setOwnerDialog(open); }}>
         <DialogContent showCloseButton={false}>
           <DialogHeader>
             <DialogTitle>{t("createOwner")}</DialogTitle>
@@ -777,38 +785,32 @@ export function Workspace() {
           </DialogHeader>
           <form
             className="grid gap-4"
-            onSubmit={(e) => {
-              e.preventDefault();
-              const f = new FormData(e.currentTarget);
-              setShops((s) => [
-                ...s,
-                {
-                  id: crypto.randomUUID(),
-                  name: String(f.get("shop")),
-                  owner: String(f.get("owner")),
-                  email: String(f.get("email")),
-                  connected: false,
-                },
-              ]);
-              setOwnerDialog(false);
-              setNotice(t("ownerCreated"));
-            }}
+            noValidate
+            onSubmit={ownerForm.handleSubmit}
           >
-            <Field label={t("shopName")} name="shop" required />
-            <Field label={t("ownerName")} name="owner" required />
-            <Field label={t("email")} name="email" type="email" required />
+            <Field label={t("shopName")} name="shopName" value={ownerForm.values.shopName} onChange={ownerForm.handleChange} onBlur={ownerForm.handleBlur} aria-invalid={!!(ownerForm.touched.shopName && ownerForm.errors.shopName)} aria-describedby={ownerForm.touched.shopName && ownerForm.errors.shopName ? "preview-shop-error" : undefined} />
+            {ownerForm.touched.shopName && ownerForm.errors.shopName && <p id="preview-shop-error" role="alert">{t("ownerShopError")}</p>}
+            <Field label={t("ownerName")} name="ownerName" value={ownerForm.values.ownerName} onChange={ownerForm.handleChange} onBlur={ownerForm.handleBlur} aria-invalid={!!(ownerForm.touched.ownerName && ownerForm.errors.ownerName)} aria-describedby={ownerForm.touched.ownerName && ownerForm.errors.ownerName ? "preview-owner-error" : undefined} />
+            {ownerForm.touched.ownerName && ownerForm.errors.ownerName && <p id="preview-owner-error" role="alert">{t("ownerNameError")}</p>}
+            <Field label={t("email")} name="email" type="email" value={ownerForm.values.email} onChange={ownerForm.handleChange} onBlur={ownerForm.handleBlur} aria-invalid={!!(ownerForm.touched.email && ownerForm.errors.email)} aria-describedby={ownerForm.touched.email && ownerForm.errors.email ? "preview-email-error" : undefined} />
+            {ownerForm.touched.email && ownerForm.errors.email && <p id="preview-email-error" role="alert">{t("ownerEmailError")}</p>}
             <Field
               label={t("temporaryPassword")}
+              name="password"
               type="password"
-              minLength={8}
-              required
               autoComplete="off"
+              value={ownerForm.values.password}
+              onChange={ownerForm.handleChange}
+              onBlur={ownerForm.handleBlur}
+              aria-invalid={!!(ownerForm.touched.password && ownerForm.errors.password)}
+              aria-describedby={ownerForm.touched.password && ownerForm.errors.password ? "preview-password-error" : undefined}
             />
+            {ownerForm.touched.password && ownerForm.errors.password && <p id="preview-password-error" role="alert">{t("ownerPasswordError")}</p>}
             <div className="form-actions">
               <Button
                 type="button"
                 variant="outline"
-                onClick={() => setOwnerDialog(false)}
+                onClick={() => { ownerForm.resetForm(); setOwnerDialog(false); }}
               >
                 {t("cancel")}
               </Button>

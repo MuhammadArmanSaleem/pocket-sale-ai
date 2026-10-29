@@ -1,5 +1,13 @@
 import type en from "./en";
 const ur: Record<keyof typeof en, string> = {
+  ownerEmailError: "درست ای میل درج کریں (زیادہ سے زیادہ 254 حروف)۔",
+  ownerNameError: "مالک کا نام درج کریں (زیادہ سے زیادہ 120 حروف)۔",
+  ownerShopError: "دکان کا نام درج کریں (زیادہ سے زیادہ 160 حروف)۔",
+  ownerPhoneError: "7 سے 15 ہندسے درج کریں؛ شروع میں + شامل ہو سکتا ہے۔",
+  ownerPasswordError: "کم از کم 12 حروف اور زیادہ سے زیادہ 72 UTF-8 بائٹس استعمال کریں۔",
+  provisionDuplicate: "اس ای میل کا اکاؤنٹ پہلے سے موجود ہے۔ آگے بڑھنے سے پہلے Auth صارف اور دکان کے ریکارڈ چیک کریں۔",
+  provisionWeakPassword: "Supabase نے پاس ورڈ قبول نہیں کیا۔ زیادہ مضبوط پاس ورڈ کے ساتھ دوبارہ کوشش کریں۔",
+  provisionRateLimited: "بہت زیادہ درخواستیں بھیجی گئیں۔ چند منٹ بعد دوبارہ کوشش کریں۔",
   searchProductNames: "مصنوعات کے نام تلاش کریں",
   searchAction: "تلاش کریں",
   clearSearch: "تلاش صاف کریں",

@@ -59,6 +59,7 @@ export const ownerProvisionSchema = yup.object({
   shopName: yup.string().trim().max(160).required(),
   phone: yup.string().trim().matches(/^\+?[0-9]{7,15}$/).required(),
 }).noUnknown();
+export const previewOwnerSchema = ownerProvisionSchema.pick(["email", "password", "ownerName", "shopName"]);
 
 export const productVisibilitySchema = yup.object({
   productId: yup.string().uuid().required(),

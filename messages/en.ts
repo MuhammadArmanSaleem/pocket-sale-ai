@@ -1,4 +1,12 @@
 const en = {
+  ownerEmailError: "Enter a valid email address (up to 254 characters).",
+  ownerNameError: "Enter the owner's name (up to 120 characters).",
+  ownerShopError: "Enter the shop name (up to 160 characters).",
+  ownerPhoneError: "Enter 7 to 15 digits, optionally starting with +.",
+  ownerPasswordError: "Use at least 12 characters and no more than 72 UTF-8 bytes.",
+  provisionDuplicate: "An account with this email already exists. Check the Auth user and shop records before proceeding.",
+  provisionWeakPassword: "Supabase rejected this password. Choose a stronger password and try again.",
+  provisionRateLimited: "Too many requests. Wait a few minutes and try again.",
   searchProductNames: "Search product names",
   searchAction: "Search",
   clearSearch: "Clear search",

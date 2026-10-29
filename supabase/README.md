@@ -1,6 +1,6 @@
 # Database foundation
 
-This folder defines the first database structure. The dashboard still uses preview data. An isolated `/auth-check` development page can verify a Supabase email/password session, but does not grant dashboard authorization. Owner provisioning, dashboard access control, WhatsApp and AI remain unimplemented.
+This folder defines the database structure. The `/demo` dashboard uses preview data. The root route opens the Supabase account flow; `/admin` and `/live` provide development admin and owner features with server-verified roles. WhatsApp and AI remain unimplemented, and hosted acceptance testing is pending.
 
 ## Exact migration order
 
@@ -92,7 +92,7 @@ References reviewed: [RLS](https://supabase.com/docs/guides/database/postgres/ro
 
 ## SSR authentication foundation (development only)
 
-Copy `.env.example` to `.env.local` and set the project's public URL and publishable key. Do not commit `.env.local` or put secret/service-role keys in public variables. `/auth-check` exercises sign-in and sign-out using Supabase Auth; it is not the production login or a role check. Next.js proxy refreshes session cookies. The preview dashboard still accepts demo credentials and must never be treated as protected or deployed as a production workspace.
+Copy `.env.example` to `.env.local` and set the project's public URL and publishable key. Do not commit `.env.local` or put secret/service-role keys in public variables. `/auth-check` signs in via Supabase Auth; `/entry` verifies roles before routing to the development workspace. Next.js proxy refreshes session cookies. The `/demo` dashboard still accepts demo credentials and must never be treated as protected or deployed as a production workspace.
 
 Before production: disable hosted public signup, provision trusted users, implement server-verified roles and account status, replace preview entry, add rate limits, MFA and reset flows, and test real authenticated sessions and tenant isolation. No migrations are applied by the SSR client setup.
 

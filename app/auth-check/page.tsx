@@ -2,6 +2,7 @@ import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import { LoginForm } from "./login-form";
+import Link from "next/link";
 
 export const dynamic = "force-dynamic";
 
@@ -17,6 +18,7 @@ export default async function AuthCheck({ searchParams }: { searchParams: Promis
       <h1>{t("loginTitle")}</h1>
       <p>{t("loginRealPartial")}</p>
       <LoginForm failed={Boolean(signInError)} />
+      <Link className="underline" href="/demo">{t("backToPreview")}</Link>
     </main>
   );
 }

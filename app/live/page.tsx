@@ -63,7 +63,7 @@ export default async function LiveCatalogue({ searchParams }: { searchParams: Pr
         </article>)}
       </section>
       <Link href="/account">{t("changeLogin")}</Link>
-      <Link href="/">{t("backToPreview")}</Link>
+      <Link href="/demo">{t("backToPreview")}</Link>
     </main>
   );
 }

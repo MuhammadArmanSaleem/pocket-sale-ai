@@ -6,6 +6,8 @@ const en = {
   passwordInvalid: "Check the password length and make sure both new passwords match.",
   passwordChangeFailed: "Password could not be changed. Check your current password or try again later.",
   passwordChanged: "Password changed.",
+  productEditFailed: "Could not save. This product may have changed; refresh before trying again.",
+  productEditHint: "Edits here cover product details only; variants and photos are not editable yet.",
   visibilityFailed: "Could not update visibility. The product may have changed; try again.",
   variantNumber: "Variant {number}",
   shopActive: "Active shop",

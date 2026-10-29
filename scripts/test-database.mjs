@@ -44,6 +44,8 @@ try {
  await eq('select shop_active as value from public.current_access()', true);
  await eq('select count(*)::int as value from public.products',1);
  await eq('select count(*)::int as value from public.shops',1);
+ await eq(`with changed as (update public.products set name='Forbidden' where id='${id(22)}' and updated_at='2000-01-01' returning id) select count(*)::int as value from changed`,0);
+ await eq(`with changed as (update public.products set name='Stale' where id='${id(21)}' and updated_at='2000-01-01' returning id) select count(*)::int as value from changed`,0);
  await eq(`with changed as (update public.products set is_visible=false where id='${id(22)}' and is_visible=true returning id) select count(*)::int as value from changed`,0);
  await eq(`with changed as (update public.products set is_visible=false where id='${id(21)}' and is_visible=true returning id) select count(*)::int as value from changed`,1);
  await eq(`with changed as (update public.products set is_visible=false where id='${id(21)}' and is_visible=true returning id) select count(*)::int as value from changed`,0);

@@ -56,3 +56,11 @@ export const productVisibilitySchema = yup.object({
   productId: yup.string().uuid().required(),
   visible: yup.boolean().strict().required(),
 }).noUnknown();
+
+export const productDetailsSchema = yup.object({
+  productId: yup.string().uuid().required(),
+  version: yup.string().datetime({ allowOffset: true }).required(),
+  name: yup.string().max(200).required().test("nonblank", "Required", value => Boolean(value?.trim())),
+  category: yup.string().max(60).defined(),
+  description: yup.string().max(2000).defined(),
+}).noUnknown();

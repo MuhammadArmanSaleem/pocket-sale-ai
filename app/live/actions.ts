@@ -50,3 +50,12 @@ export async function productVisibilityAction(input: unknown): Promise<ProductCr
     return { ok: true };
   } catch { return { ok: false }; }
 }
+
+export async function updateProductDetailsAction(input: unknown): Promise<ProductCreateResult> {
+  try {
+    const { updateProductDetails } = await import("@/lib/supabase/catalogue");
+    await updateProductDetails(input);
+    revalidatePath("/live");
+    return { ok: true };
+  } catch { return { ok: false }; }
+}

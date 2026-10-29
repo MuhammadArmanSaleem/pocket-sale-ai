@@ -18,6 +18,7 @@ import { loadShopPolicy } from "@/lib/supabase/policies";
 import { listSupportTickets } from "@/lib/supabase/support";
 import { SupportForm } from "./support-form";
 import { signOut } from "@/app/auth-check/actions";
+import { AccountHeader } from "@/components/account-header";
 
 export const dynamic = "force-dynamic";
 
@@ -33,9 +34,8 @@ export default async function LiveCatalogue({ searchParams }: { searchParams: Pr
   }
   const [products, policy, tickets] = await Promise.all([listProducts(page, search), loadShopPolicy(), listSupportTickets()]);
   return (
-    <main className="mx-auto grid max-w-3xl gap-6 p-6">
+    <><AccountHeader role="owner" /><main className="mx-auto grid max-w-3xl gap-6 p-6">
       <header><h1>{t("catalogueTitle")}</h1><p>{t("realCataloguePartial")}</p></header>
-      <form action={signOut}><button className="underline" type="submit">{t("signOutReal")}</button></form>
       <ProductForm />
       <ImportProducts />
       {policy ? <PolicyForm initial={policy} /> : <p>{t("policyMissing")}</p>}
@@ -65,7 +65,6 @@ export default async function LiveCatalogue({ searchParams }: { searchParams: Pr
         </article>)}
       </section>
       <Link href="/account">{t("changeLogin")}</Link>
-      <Link href="/demo">{t("backToPreview")}</Link>
-    </main>
+    </main></>
   );
 }

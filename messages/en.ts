@@ -1,4 +1,5 @@
 const en = {
+  languageUpdating: "Updating language",
   liveImportHint: "Import up to 25 products per file. Products are saved as hidden; existing products are not matched or updated. Photos are not uploaded.",
   liveImportPending: "Saving products. Please keep this page open.",
   liveImportInvalid: "Check the file: use up to 25 products with valid names, variants, prices and stock.",
@@ -60,7 +61,7 @@ const en = {
   policyMissing: "Shop policies are not configured. Contact an administrator.",
   signOutReal: "Sign out",
   catalogueUnavailable: "This catalogue is available to active shop owners only.",
-  realCataloguePartial: "Early catalogue: photos and import are not connected yet.",
+  realCataloguePartial: "Manage your catalogue and shop policies. Photo uploads are not available yet.",
   backToPreview: "Open interface preview",
   saveFailed: "Could not save the product. Please try again.",
   authFailed: "Unable to sign in. Check your credentials or contact the administrator.",

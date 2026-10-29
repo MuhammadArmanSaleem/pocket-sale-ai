@@ -14,6 +14,7 @@ const en = {
   productEditFailed: "Could not save. This product may have changed; refresh before trying again.",
   productEditHint: "Edit product details here. Use each variant’s Edit button to change its size, colour, price or stock.",
   visibilityFailed: "Could not update visibility. The product may have changed; try again.",
+  openRealAccount: "Sign in to an account",
   cataloguePagination: "Catalogue pages",
   previousPage: "Previous",
   nextPage: "Next",

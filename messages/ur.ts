@@ -15,6 +15,7 @@ const ur: Record<keyof typeof en, string> = {
   productEditFailed: "محفوظ نہیں ہوا۔ ممکن ہے مصنوعات بدل گئی ہو؛ دوبارہ کوشش سے پہلے ریفریش کریں۔",
   productEditHint: "یہاں مصنوعات کی تفصیلات بدلیں۔ ویریئنٹ کی ترمیم اس کے اپنے بٹن سے کریں۔",
   visibilityFailed: "حیثیت اپ ڈیٹ نہیں ہوئی۔ ممکن ہے مصنوعات بدل گئی ہو؛ دوبارہ کوشش کریں۔",
+  openRealAccount: "اکاؤنٹ میں سائن اِن کریں",
   cataloguePagination: "کیٹلاگ کے صفحات",
   previousPage: "پچھلا",
   nextPage: "اگلا",

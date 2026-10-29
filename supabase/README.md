@@ -76,6 +76,8 @@ Private bucket: `product-images`. Object name: `<shop UUID>/<product UUID>/<uniq
 
 JPEG/PNG/WebP and 5 MiB per object match provisional UI limits. The six-photo UI cap is **not** enforced by this migration and remains a product decision. Neither MIME allowlists nor path rules inspect file content; validation/scanning belongs in the later upload flow. Metadata does not prove the object exists. Upload/metadata failures need compensating cleanup. Removing metadata does not delete a stored object: use Storage API deletion and reconcile orphans; never delete from `storage.objects` with raw SQL. No public image bucket or admin file access is added.
 
+The development owner page uploads a selected image using the owner's session, checks its first bytes in the browser, writes metadata and displays short-lived signed URLs. The UI limits photo selection to six but this is not a database-enforced or concurrency-safe quota. Browser checks can be bypassed and are not full content inspection or malware scanning. A definite metadata rejection triggers object cleanup; uncertain upload, metadata or cleanup results require manual review. Image removal and orphan reconciliation are not implemented. Hosted upload, tenant-isolation and signed-URL acceptance tests remain pending.
+
 ## Drafts and support behavior
 
 Drafts do not reserve, deduct or validate available stock. Quantity may exceed available stock because confirmation rules are deferred. The later backend must derive trusted item snapshots/prices from catalogue data; current owner-editable snapshots are draft content, not financial records. No totals, payment, shipping or confirmation automation exists.

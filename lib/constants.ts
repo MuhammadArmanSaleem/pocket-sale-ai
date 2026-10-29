@@ -12,6 +12,8 @@ export const MAX_IMPORT_ROWS = 500;
 export const MAX_LIVE_IMPORT_PRODUCTS = 25;
 export const MAX_PHOTO_BYTES = 5 * 1024 * 1024;
 export const MAX_PHOTOS = 6;
+export const PRODUCT_IMAGE_BUCKET = "product-images";
+export const PRODUCT_IMAGE_URL_SECONDS = 300;
 export const IMPORT_HEADERS = [
   "name",
   "category",

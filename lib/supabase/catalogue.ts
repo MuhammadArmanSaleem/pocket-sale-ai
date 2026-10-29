@@ -1,5 +1,5 @@
 import "server-only";
-import { CATALOGUE_PAGE_SIZE, MAX_CATALOGUE_PAGE } from "../constants";
+import { CATALOGUE_PAGE_SIZE, MAX_CATALOGUE_PAGE, PRODUCT_IMAGE_BUCKET, PRODUCT_IMAGE_URL_SECONDS } from "../constants";
 import { createClient } from "./server";
 import { getAccountAccess } from "./access";
 import { parseCatalogueSearch } from "../pagination";
@@ -32,7 +32,7 @@ export async function listProducts(page: number, search = "") {
   const client = await createClient();
   if (parseCatalogueSearch(search) !== search) throw new Error("Invalid search");
   let query = client.from("products")
-    .select("id,name,category,description,updated_at,is_visible,product_variants(id,size,colour,unit_price,stock_quantity,updated_at)")
+    .select("id,name,category,description,updated_at,is_visible,product_variants(id,size,colour,unit_price,stock_quantity,updated_at),product_images(id,object_name,sort_order)")
     .eq("shop_id", access.shopId);
   if (search) query = query.ilike("name", `%${search}%`);
   const { data, error } = await query
@@ -40,7 +40,11 @@ export async function listProducts(page: number, search = "") {
     .order("id", { ascending: false })
     .range(offset, offset + CATALOGUE_PAGE_SIZE);
   if (error || !data) throw new Error("Unable to load products");
-  return { items: data.slice(0, CATALOGUE_PAGE_SIZE), hasNext: data.length > CATALOGUE_PAGE_SIZE && page < MAX_CATALOGUE_PAGE };
+  const items = data.slice(0, CATALOGUE_PAGE_SIZE);
+  const paths = items.flatMap(product => product.product_images.map(photo => photo.object_name));
+  const signed = paths.length ? await client.storage.from(PRODUCT_IMAGE_BUCKET).createSignedUrls(paths, PRODUCT_IMAGE_URL_SECONDS) : null;
+  const urls = new Map((signed?.data ?? []).filter(item => item.path && item.signedUrl).map(item => [item.path, item.signedUrl]));
+  return { items: items.map(product => ({ ...product, photos: product.product_images.slice().sort((a, b) => a.sort_order - b.sort_order).map(photo => ({ ...photo, url: urls.get(photo.object_name) ?? null })) })), hasNext: data.length > CATALOGUE_PAGE_SIZE && page < MAX_CATALOGUE_PAGE, photoError: Boolean(signed?.error) };
 }
 
 export async function setProductVisibility(input: unknown): Promise<void> {

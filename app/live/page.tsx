@@ -1,7 +1,10 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { getTranslations } from "next-intl/server";
-import { parseCataloguePage } from "@/lib/pagination";
+import { cataloguePageHref, parseCataloguePage, parseCatalogueSearch } from "@/lib/pagination";
+import { MAX_CATALOGUE_SEARCH_LENGTH } from "@/lib/constants";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 import { getAccountAccess } from "@/lib/supabase/access";
 import { listProducts } from "@/lib/supabase/catalogue";
 import { AddVariantForm } from "./add-variant-form";
@@ -17,15 +20,17 @@ import { signOut } from "@/app/auth-check/actions";
 
 export const dynamic = "force-dynamic";
 
-export default async function LiveCatalogue({ searchParams }: { searchParams: Promise<{ page?: string | string[] }> }) {
-  const page = parseCataloguePage((await searchParams).page);
+export default async function LiveCatalogue({ searchParams }: { searchParams: Promise<{ page?: string | string[]; q?: string | string[] }> }) {
+  const params = await searchParams;
+  const page = parseCataloguePage(params.page);
+  const search = parseCatalogueSearch(params.q);
   const t = await getTranslations();
   const access = await getAccountAccess();
   if (!access) redirect("/auth-check");
   if (access.role !== "owner") {
     return <main className="mx-auto grid max-w-3xl gap-4 p-6"><p>{t("catalogueUnavailable")}</p><form action={signOut}><button type="submit">{t("signOutReal")}</button></form></main>;
   }
-  const [products, policy, tickets] = await Promise.all([listProducts(page), loadShopPolicy(), listSupportTickets()]);
+  const [products, policy, tickets] = await Promise.all([listProducts(page, search), loadShopPolicy(), listSupportTickets()]);
   return (
     <main className="mx-auto grid max-w-3xl gap-6 p-6">
       <header><h1>{t("catalogueTitle")}</h1><p>{t("realCataloguePartial")}</p></header>
@@ -33,6 +38,12 @@ export default async function LiveCatalogue({ searchParams }: { searchParams: Pr
       <ProductForm />
       {policy ? <PolicyForm initial={policy} /> : <p>{t("policyMissing")}</p>}
       <section id="products"><h2>{t("products")}</h2>
+        <form action="/live#products" method="get" className="flex flex-wrap gap-2 py-3">
+          <label className="sr-only" htmlFor="catalogue-search">{t("searchProductNames")}</label>
+          <Input id="catalogue-search" name="q" defaultValue={search} maxLength={MAX_CATALOGUE_SEARCH_LENGTH} placeholder={t("searchProductNames")} />
+          <Button type="submit">{t("searchAction")}</Button>
+          {search && <Button asChild variant="outline"><Link href="/live#products">{t("clearSearch")}</Link></Button>}
+        </form>
         {products.items.length === 0 ? <p>{t("noResults")}</p> : <ul>{products.items.map((p) => <li key={p.id} className="grid gap-2 border-b py-3"><strong>{p.name}</strong><p>{p.category} · {t(p.is_visible ? "active" : "hidden")}</p>
           <ul>{p.product_variants.map(variant => <li key={variant.id}>{variant.size} · {variant.colour} · <bdi>Rs {Number(variant.unit_price).toLocaleString("en-PK")}</bdi> · {t("stock")}: {variant.stock_quantity}<VariantEditor variantCount={p.product_variants.length} variantId={variant.id} productId={p.id} version={variant.updated_at} size={variant.size} colour={variant.colour} price={Number(variant.unit_price)} stock={variant.stock_quantity} /></li>)}</ul>
           <AddVariantForm productId={p.id} variantCount={p.product_variants.length} />
@@ -40,9 +51,9 @@ export default async function LiveCatalogue({ searchParams }: { searchParams: Pr
           <ProductDetailsEditor productId={p.id} version={p.updated_at} name={p.name} category={p.category} description={p.description} />
         </li>)}</ul>}
         <nav aria-label={t("cataloguePagination")} className="flex flex-wrap items-center gap-3 py-4">
-          {page > 1 && <Link href={`/live?page=${page - 1}#products`}>{t("previousPage")}</Link>}
+          {page > 1 && <Link href={cataloguePageHref(page - 1, search)}>{t("previousPage")}</Link>}
           <span>{t("pageNumber", { number: page })}</span>
-          {products.hasNext && <Link href={`/live?page=${page + 1}#products`}>{t("nextPage")}</Link>}
+          {products.hasNext && <Link href={cataloguePageHref(page + 1, search)}>{t("nextPage")}</Link>}
         </nav>
       </section>
       <section className="surface grid gap-4 p-6"><h2>{t("supportTitle")}</h2><SupportForm />

@@ -1,5 +1,8 @@
 import type en from "./en";
 const ur: Record<keyof typeof en, string> = {
+  searchProductNames: "مصنوعات کے نام تلاش کریں",
+  searchAction: "تلاش کریں",
+  clearSearch: "تلاش صاف کریں",
   provisionOwnerTitle: "مالک کا اکاؤنٹ بنائیں",
   provisionOwnerHint: "پہلے مالک کے ای میل کی تصدیق کریں۔ ابتدائی پاس ورڈ محفوظ طریقے سے دیں اور مالک کو سائن اِن کے بعد اسے تبدیل کرنے کو کہیں۔ کوئی ای میل خودکار طور پر نہیں بھیجی جائے گی۔",
   provisionPassword: "ابتدائی پاس ورڈ",

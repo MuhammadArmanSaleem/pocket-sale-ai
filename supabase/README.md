@@ -108,4 +108,4 @@ The `remove_product_variant` RPC checks owner scope, locks the parent product, p
 
 The `add_product_variant` RPC locks the product and enforces a 100-variant limit for calls through that RPC. A trigger also checks direct inserts and locks the parent product. Hosted and concurrent behaviour remain unverified.
 
-The work-in-progress owner catalogue uses offset pagination of 20 products, bounded to 10,000 pages. Ordering is by creation time and ID; concurrent inserts can shift items between pages. Search, keyset pagination and hosted performance verification remain pending.
+The work-in-progress owner catalogue uses offset pagination of 20 products, bounded to 10,000 pages. Ordering is by creation time and ID; concurrent inserts can shift items between pages. Name search is case-insensitive and retains its query when paging; SQL pattern characters can act as wildcards. Keyset pagination and hosted performance verification remain pending.

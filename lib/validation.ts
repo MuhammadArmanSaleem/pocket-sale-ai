@@ -1,5 +1,5 @@
 import * as yup from "yup";
-import { MIN_NEW_PASSWORD_LENGTH, MAX_PASSWORD_BYTES } from "./constants";
+import { MIN_NEW_PASSWORD_LENGTH, MAX_PASSWORD_BYTES, MAX_PRODUCT_VARIANTS } from "./constants";
 
 // Login checks format and presence only. Password policy applies at creation,
 // while authentication must be performed by the server.
@@ -18,7 +18,7 @@ export const createProductSchema = yup.object({
     colour: yup.string().trim().min(1).max(80).required(),
     price: yup.number().strict().positive().max(9999999999.99).test("currency", "Invalid price", value => value === undefined || Math.abs(value * 100 - Math.round(value * 100)) < 0.000001).required(),
     stock: yup.number().strict().integer().min(0).max(2147483647).required(),
-  }).noUnknown().required()).min(1).max(100).required().test("unique-variants", "Duplicate variants", variants => {
+  }).noUnknown().required()).min(1).max(MAX_PRODUCT_VARIANTS).required().test("unique-variants", "Duplicate variants", variants => {
     if (!variants) return true;
     if (variants.some(v => !v || typeof v.size !== "string" || typeof v.colour !== "string")) return true;
     const combinations = variants.map(v => JSON.stringify([v.size.trim().toLowerCase(), v.colour.trim().toLowerCase()]));

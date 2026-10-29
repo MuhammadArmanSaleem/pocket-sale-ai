@@ -27,3 +27,5 @@ export const PHOTO_MIME_TYPES = ["image/png", "image/jpeg", "image/webp"];
 // Provisional application password bounds; hosted Auth settings also apply.
 export const MIN_NEW_PASSWORD_LENGTH = 12;
 export const MAX_PASSWORD_BYTES = 72;
+
+export const MAX_PRODUCT_VARIANTS = 100;

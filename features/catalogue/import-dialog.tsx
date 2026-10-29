@@ -50,8 +50,7 @@ export function ImportDialog({ open, setOpen, onImport }: ImportDialogProps) {
           onClick={() => {
             const blob = new Blob(
               [
-                IMPORT_HEADERS.join(",") +
-                  "\nCotton shirt,Shirts,M,Black,1850,5\n",
+                IMPORT_HEADERS.join(",") + "\n",
               ],
               { type: "text/csv" },
             );

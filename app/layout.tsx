@@ -6,8 +6,8 @@ import { DEFAULT_LOCALE, isLocale, LOCALE_DIRECTION } from "@/lib/constants";
 import type { RootLayoutProps } from "@/lib/types";
 import "./globals.css";
 export const metadata: Metadata = {
-  title: "PocketSales AI · Workspace preview",
-  description: "Bilingual seller and super admin workspace design preview.",
+  title: "PocketSales AI",
+  description: "Bilingual seller and super admin workspace.",
 };
 export default async function RootLayout({ children }: RootLayoutProps) {
   const value = await getLocale();

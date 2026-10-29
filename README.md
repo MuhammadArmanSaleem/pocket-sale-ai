@@ -12,7 +12,7 @@ A bilingual seller and super admin dashboard UI built with Next.js, TypeScript, 
 - English/Urdu translations, server-set document direction, Radix direction context and locale cookie.
 - Responsive layouts and keyboard-accessible primitives; browser/device acceptance remains pending.
 
-The sample workspace is available at `/demo`; its records live in React memory and reset on reload. The root route opens the real Supabase account flow, with development admin and owner pages backed by the database. The real catalogue can import up to 25 validated products per file as hidden products; imports stop on the first uncertain result and require inspection before retry. Real photo upload, WhatsApp and AI remain unfinished, and hosted acceptance tests are pending. Language preference persists in a cookie. Do not enter real customer information in the demo.
+The root route opens the real Supabase account flow, with development admin and owner pages backed by the database. `/demo` redirects to the real account flow; the former sample workspace is not exposed as a route. The real catalogue can import up to 25 validated products per file as hidden products; imports stop on the first uncertain result and require inspection before retry. Real photo upload, WhatsApp and AI remain unfinished, and hosted acceptance tests are pending. Language preference persists in a cookie.
 
 ## Run
 ```sh
@@ -24,7 +24,7 @@ npm test
 npm run build
 ```
 
-Open localhost:3000 for the real account flow after configuring Supabase; `/demo` opens the sample workspace. The demo role selector is not authorization.
+Open localhost:3000 for the real account flow after configuring Supabase. Account roles are determined by server-verified database records.
 
 ## Project guide
 [PRD](PRD.md) · [Architecture](ARCHITECTURE.md) · [Essentials](ARCHITECTURE-ESSENTIALS.md) · [Design](DESIGN.md) · [Decisions](DECISIONS.md) · [Frontend review](FRONTEND-REVIEW.md) · [Research](RESEARCH.md) · [Agent rules](AGENTS.md) · [Claude entry](CLAUDE.md)

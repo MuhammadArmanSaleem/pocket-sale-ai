@@ -12,6 +12,7 @@ import { VariantEditor } from "./variant-editor";
 import { ProductDetailsEditor } from "./product-details-editor";
 import { VisibilityButton } from "./visibility-button";
 import { ProductForm } from "./product-form";
+import { ImportProducts } from "./import-products";
 import { PolicyForm } from "./policy-form";
 import { loadShopPolicy } from "@/lib/supabase/policies";
 import { listSupportTickets } from "@/lib/supabase/support";
@@ -36,6 +37,7 @@ export default async function LiveCatalogue({ searchParams }: { searchParams: Pr
       <header><h1>{t("catalogueTitle")}</h1><p>{t("realCataloguePartial")}</p></header>
       <form action={signOut}><button className="underline" type="submit">{t("signOutReal")}</button></form>
       <ProductForm />
+      <ImportProducts />
       {policy ? <PolicyForm initial={policy} /> : <p>{t("policyMissing")}</p>}
       <section id="products"><h2>{t("products")}</h2>
         <form action="/live#products" method="get" className="flex flex-wrap gap-2 py-3">

@@ -1,6 +1,6 @@
 # Manual setup for the dev preview
 
-This guide connects the **dev preview** to the Supabase project `pocket-sale-ai` (`qeqfptszpsipnxcjgsxb`). It is a development setup, not a production launch. The root page opens the real account flow; `/demo` contains temporary sample data. Some features such as real photo upload and persistent imports are not complete.
+This guide connects the **dev preview** to the Supabase project `pocket-sale-ai` (`qeqfptszpsipnxcjgsxb`). It is a development setup, not a production launch. The root page opens the real account flow; `/demo` contains temporary sample data. Real photo upload is not complete.
 
 **Never send your Supabase password, database password, API secret, or app password in chat, GitHub, or a screenshot.** The `sb_publishable_...` key is public; an `sb_secret_...` key or legacy `service_role` key is private and gives broad access.
 
@@ -104,7 +104,7 @@ The dev Vercel preview points to the selected Supabase project, not an isolated 
 3. In the admin page, create a test owner and shop. The form asks for an initial password; share it securely with the test owner. It does not email an invitation. If the form says creation needs review, **do not retry**; inspect Auth Users and shop records first because the identity may have been created even if the response failed.
 4. Sign out, sign in as the test owner, and check `/live`: add a product with a variant, refresh the page, and check that it remains. Test support and the password change page too.
 
-The dashboard at `/demo` is a demo and resets its local changes. Successful tests on `/live` do not mean photo uploads, persistent imports, WhatsApp, AI, password reset, MFA or distributed rate limiting are complete. Hosted tenant-isolation, browser/mobile and Urdu RTL tests remain required.
+The dashboard at `/demo` is a demo and resets its local changes. The real catalogue supports a limited CSV/XLSX import; inspect the catalogue before retrying an interrupted import. Successful tests on `/live` do not mean photo uploads, WhatsApp, AI, password reset, MFA or distributed rate limiting are complete. Hosted tenant-isolation, import, browser/mobile and Urdu RTL tests remain required.
 
 ## Common issues
 

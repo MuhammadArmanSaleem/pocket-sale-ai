@@ -14,6 +14,7 @@
     "lib/numbers.ts",
     "lib/validation.ts",
     "lib/import.ts",
+    "lib/import-batch.ts",
     "lib/variants.ts",
     "lib/spreadsheet.ts",
     "lib/constants.ts",

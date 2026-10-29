@@ -184,3 +184,15 @@ export interface ShopPolicyInput {
 
 export interface SupportTicketInput { subject: string; body: string }
 export interface SupportReplyInput { ticketId: string; body: string }
+
+export interface OwnerProvisionInput {
+  email: string;
+  password: string;
+  ownerName: string;
+  shopName: string;
+  phone: string;
+}
+export type OwnerProvisionResult =
+  | { status: "success" }
+  | { status: "invalid" | "unauthorized" | "unavailable" | "review" }
+  | { status: "partial"; userId: string };

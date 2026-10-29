@@ -10,6 +10,7 @@
   "include": [
     "lib/access.ts",
     "lib/pagination.ts",
+    "lib/provision-owner.ts",
     "lib/numbers.ts",
     "lib/validation.ts",
     "lib/import.ts",

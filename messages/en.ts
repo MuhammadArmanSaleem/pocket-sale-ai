@@ -1,4 +1,13 @@
 const en = {
+  provisionOwnerTitle: "Create owner account",
+  provisionOwnerHint: "Verify the owner's email first. Share the initial password securely and ask the owner to change it after signing in. No email is sent automatically.",
+  provisionPassword: "Initial password",
+  provisionRequirements: "Use at least 12 characters and at most 72 UTF-8 bytes for the password. Enter 7–15 phone digits, optionally starting with +.",
+  provisionInvalid: "Check the email, names, phone number and password requirements.",
+  provisionSuccess: "Owner and shop created. Deliver the password securely.",
+  provisionPartial: "Account creation needs manual review. Do not retry. Check Auth and the shop records for user ID:",
+  provisionReview: "Account creation could not be confirmed. Do not retry until the Auth user list and shop records have been checked.",
+  provisionUnavailable: "Unable to create the account. Check the information and server configuration.",
   currentPassword: "Current password",
   newPassword: "New password",
   confirmPassword: "Confirm new password",

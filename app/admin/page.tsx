@@ -7,6 +7,7 @@ import * as yup from "yup";
 import { listAdminSupportTickets } from "@/lib/supabase/admin-support";
 import { signOut } from "@/app/auth-check/actions";
 import { AdminSupportControls } from "./support-controls";
+import { ProvisionForm } from "./provision-form";
 
 export const dynamic = "force-dynamic";
 export default async function AdminPage({ searchParams }: { searchParams: Promise<{ shop?: string }> }) {
@@ -19,6 +20,7 @@ export default async function AdminPage({ searchParams }: { searchParams: Promis
   return <main className="mx-auto grid max-w-3xl gap-6 p-6"><h1>{t("supportTitle")}</h1>
     <p>{t("adminSupportPartial")}</p><form action={signOut}><button type="submit" className="underline">{t("signOutReal")}</button></form>
     <Link href="/account">{t("changeLogin")}</Link>
+    <ProvisionForm />
     <section className="surface grid gap-3 p-6"><h2>{t("owners")}</h2>
       {shops.length === 0 && <p>{t("noResults")}</p>}
       {shops.map(item => <article key={item.id} className="grid gap-1 border-t pt-3"><h3>{item.name}</h3>

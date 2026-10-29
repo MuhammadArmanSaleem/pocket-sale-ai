@@ -2,6 +2,7 @@ import "server-only";
 import { CATALOGUE_PAGE_SIZE, MAX_CATALOGUE_PAGE } from "../constants";
 import { createClient } from "./server";
 import { getAccountAccess } from "./access";
+import { parseCatalogueSearch } from "../pagination";
 import { createProductSchema, productVisibilitySchema, productDetailsSchema, variantEditSchema, variantRemoveSchema, variantAddSchema } from "../validation";
 
 // This entry point is not yet connected to the preview catalogue.
@@ -23,15 +24,18 @@ export async function createProduct(input: unknown): Promise<string> {
   return data;
 }
 
-export async function listProducts(page: number) {
+export async function listProducts(page: number, search = "") {
   if (!Number.isInteger(page) || page < 1 || page > MAX_CATALOGUE_PAGE) throw new Error("Invalid page");
   const offset = (page - 1) * CATALOGUE_PAGE_SIZE;
   const access = await getAccountAccess();
   if (!access || access.role !== "owner") throw new Error("Access denied");
   const client = await createClient();
-  const { data, error } = await client.from("products")
+  if (parseCatalogueSearch(search) !== search) throw new Error("Invalid search");
+  let query = client.from("products")
     .select("id,name,category,description,updated_at,is_visible,product_variants(id,size,colour,unit_price,stock_quantity,updated_at)")
-    .eq("shop_id", access.shopId)
+    .eq("shop_id", access.shopId);
+  if (search) query = query.ilike("name", `%${search}%`);
+  const { data, error } = await query
     .order("created_at", { ascending: false })
     .order("id", { ascending: false })
     .range(offset, offset + CATALOGUE_PAGE_SIZE);

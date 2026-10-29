@@ -32,3 +32,4 @@ export const MAX_PRODUCT_VARIANTS = 100;
 
 export const CATALOGUE_PAGE_SIZE = 20;
 export const MAX_CATALOGUE_PAGE = 10000;
+export const MAX_CATALOGUE_SEARCH_LENGTH = 100;

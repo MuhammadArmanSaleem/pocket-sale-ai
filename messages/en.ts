@@ -1,4 +1,7 @@
 const en = {
+  searchProductNames: "Search product names",
+  searchAction: "Search",
+  clearSearch: "Clear search",
   provisionOwnerTitle: "Create owner account",
   provisionOwnerHint: "Verify the owner's email first. Share the initial password securely and ask the owner to change it after signing in. No email is sent automatically.",
   provisionPassword: "Initial password",

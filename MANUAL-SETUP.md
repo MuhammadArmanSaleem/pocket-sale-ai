@@ -69,12 +69,31 @@ The final result must be `1`. A result of `0` means the UUID did not identify a 
 
 ## 4. Add the server secret to the Vercel dev preview
 
-The public Supabase URL and publishable key were already added to Vercel for the `dev` branch preview. The remaining secret is needed only for the admin's owner-creation form.
+The public Supabase URL and publishable key were already added to Vercel for the `dev` branch preview. This separate secret allows the admin's server-side owner-creation form to create Auth users. Keep it private: it bypasses database row-level security. These steps work on a phone; if a menu is hidden, try your browser's **Desktop site** option.
 
-1. In Supabase, open **Project Settings → API Keys → Publishable and secret API keys**. Find or create a secret key. Treat it like a password; it bypasses row-level security. Never select the publishable key for this step.
-2. In Vercel, open **pocket-sale-ai → Settings → Environment Variables → Add New**.
-3. Set the key name to `SUPABASE_SECRET_KEY`, paste the Supabase secret as its value, and mark it **Sensitive/Secret**. Target **Preview** and restrict it to Git branch **dev**. Do not add it to Production, and do not prefix the name with `NEXT_PUBLIC_`.
-4. Save. Open **Deployments**, select the latest deployment for **dev**, and choose **Redeploy** so it picks up the new value. Wait for **Ready**.
+### A. Copy the secret from Supabase
+
+1. Open the [Supabase dashboard](https://supabase.com/dashboard) and sign in. Select **pocket-sale-ai** (reference `qeqfptszpsipnxcjgsxb`).
+2. Open **Project Settings** (gear icon) → **API Keys**. Select **Publishable and secret API keys** if tabs are shown.
+3. Under **Secret keys**, find an existing secret key or use the dashboard's create option. A modern secret starts with `sb_secret_`. Copy it using the copy button. You may need to reveal it or complete a dashboard security check first. Do **not** copy the `sb_publishable_` key.
+4. Keep the value in your clipboard only long enough to paste it into Vercel. Never paste it into chat, GitHub, a public document, or a screenshot.
+
+### B. Save it in Vercel
+
+1. Open [Vercel](https://vercel.com/dashboard) in another tab and sign in to the account that owns **pocket-sale-ai**.
+2. Open the **pocket-sale-ai** project → **Settings** → **Environment Variables** → **Add New** (or **Add Environment Variable**).
+3. In the **Key / Name** box, type exactly `SUPABASE_SECRET_KEY`. This is the variable name, not the secret itself.
+4. In the **Value** box, paste the `sb_secret_...` value you copied from Supabase. Do not add quotes, spaces, or `NEXT_PUBLIC_` to the name.
+5. Choose the **Secret** type (or enable **Sensitive**, if your dashboard uses that label). Select **Preview** only; deselect **Production** and **Development** if they are selected.
+6. In the Preview branch selector, choose or enter **dev**. If you cannot find a branch selector, stop and ask for help rather than applying the secret to every preview branch.
+7. Tap **Save**. You should see the name `SUPABASE_SECRET_KEY` in the list, scoped to Preview / `dev`; the value may be hidden after saving. Do not create a duplicate if it is already present—check its environment and branch instead.
+
+### C. Redeploy the dev preview
+
+1. In the same Vercel project, open **Deployments**.
+2. Find the newest deployment whose Git branch is **dev**. Open its menu (often **⋯**) and choose **Redeploy**. If asked, make sure it is the **preview**, not production, deployment.
+3. Wait until its status says **Ready**, then open that deployment. Adding an environment variable does not update an existing deployment until it is rebuilt or redeployed.
+4. Tell the assistant the secret was saved and the deployment is Ready; don't send the value. The assistant can check the variable's name and scope without reading the secret, but a real owner-creation test is needed to verify its value works.
 
 The dev Vercel preview points to the selected Supabase project, not an isolated database branch. Use test data only. The preview may require signing in to Vercel.
 

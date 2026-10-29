@@ -17,6 +17,7 @@ Run from repository root. Supabase CLI runs timestamped filenames in this order 
 9. `migrations/20261029073108_enforce_variant_removal.sql` — removes direct owner DELETE and restricts removal to the checked function.
 10. `migrations/20261029073756_add_variant_safely.sql` — owner-scoped variant creation with a per-product limit through the RPC.
 11. `migrations/20261029081143_enforce_variant_limit.sql` — applies the limit to direct inserts as well.
+12. `migrations/20261029082057_require_product_variant.sql` — rejects newly created products without variants at transaction end.
 
 Do not run a later file first. These are one-time forward migrations, not repeatedly executable scripts. Create changes with `npx supabase migration new descriptive_name`; never edit applied migration history. The files were generated with CLI 2.122.0. No seed data or credentials are included.
 
@@ -101,6 +102,6 @@ The authenticated account page checks the current password with a separate, non-
 
 The `provision_owner_records` RPC is service-role-only and creates profile, shop and initial policy atomically. It does not create an Auth user, send an invitation, check an admin caller or implement retry/idempotency. A future trusted server must verify the admin and handle Auth/database partial failure explicitly; do not expose the secret key.
 
-The `remove_product_variant` RPC checks owner scope, locks the parent product, prevents deleting the last variant through the RPC and checks the variant version. Draft-referenced variants remain protected by foreign keys. Authenticated direct table DELETE is revoked by migration 9; a checked security-definer function in the private schema performs removal after verifying the authenticated owner and active shop. Existing direct inserts still permit products to be created without variants, so the schema does not guarantee every product starts with a variant. Concurrent requests and hosted security advisors have not yet been tested.
+The `remove_product_variant` RPC checks owner scope, locks the parent product, prevents deleting the last variant through the RPC and checks the variant version. Draft-referenced variants remain protected by foreign keys. Authenticated direct table DELETE is revoked by migration 9; a checked security-definer function in the private schema performs removal after verifying the authenticated owner and active shop. Migration 12 adds a deferred check for newly inserted products, allowing the first variants to be inserted in the same transaction. Existing products are not retroactively checked. Concurrent requests and hosted security advisors have not yet been tested.
 
 The `add_product_variant` RPC locks the product and enforces a 100-variant limit for calls through that RPC. A trigger also checks direct inserts and locks the parent product. Hosted and concurrent behaviour remain unverified.

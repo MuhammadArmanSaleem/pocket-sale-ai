@@ -33,7 +33,7 @@ export function parseImportRows(rows: unknown[][]): Product[] {
       stock < 0
     )
       throw new Error("Invalid product");
-    const key = (name + "|" + category).toLowerCase();
+    const key = JSON.stringify([name.toLowerCase(), category.toLowerCase()]);
     const p = products.get(key) ?? {
       id: crypto.randomUUID(),
       name,

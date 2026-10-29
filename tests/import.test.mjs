@@ -14,6 +14,16 @@ test("groups variants and defaults imported products to hidden", () => {
   assert.equal(result[0].visible, false);
   assert.equal(result[0].variants[1].price, 1950);
 });
+test("keeps products with delimiter characters in distinct groups", () => {
+  const result = parseImportRows([
+    [...IMPORT_HEADERS],
+    ["Shirt|Summer", "Casual", "M", "Black", 100, 1],
+    ["Shirt", "Summer|Casual", "M", "Black", 200, 2],
+  ]);
+  assert.equal(result.length, 2);
+  assert.equal(result[0].variants[0].price, 100);
+  assert.equal(result[1].variants[0].price, 200);
+});
 test("rejects duplicate combinations ignoring case", () =>
   assert.throws(() =>
     parseImportRows([
